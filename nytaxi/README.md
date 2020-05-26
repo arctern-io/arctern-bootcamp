@@ -39,10 +39,10 @@ $ unzip taxi_zones.zip
 
 ## 运行 jupyter-notebook
 
-下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_bootcamp.ipynb) 文件，在 Conda 环境中运行 jupyter notebook：
+下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 文件，在 Conda 环境中运行 jupyter notebook：
 
 ```bash
-$ wget [link]/arctern_nytaxi_bootcamp.ipynb
+$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/arctern_nytaxi_bootcamp.ipynb
 # 运行 jupyter notebook
 $ jupyter notebook
 ```
@@ -53,7 +53,7 @@ $ jupyter notebook
 
 ## 纽约出租车数据分析示例
 
-接下来将介绍如何利用 Arctern 处理大规模的 gis 数据，同时结合 Keplergl 展示数据，你也可以用 jupyter 直接运行 [arctern_nytaxi_bootcamp.ipynb](./arctern_bootcamp.ipynb) 代码。
+接下来将介绍如何利用 Arctern 处理大规模的 gis 数据，同时结合 Keplergl 展示数据，你也可以用 jupyter 直接运行 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 代码。
 
 ### 1. 数据预处理
 
