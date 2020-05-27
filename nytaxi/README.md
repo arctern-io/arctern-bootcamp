@@ -255,7 +255,7 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_50
 
 #### 2.2 关于距离
 
-我们按照里程距离来计算上车点和下车点的直线距离：
+我们还可以计算上车点和下车点的直线距离：
 
 
 ```python
