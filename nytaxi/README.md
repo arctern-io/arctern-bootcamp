@@ -2,7 +2,7 @@
 
 ## 环境准备
 
-- #### [安装基于 Python 的 Arctern 后台](https://arctern.io/docs/versions/v0.1.x/arctern-webdocs/development-doc-cn/html/python/installation_and_deployment/install_arctern_on_python.html)
+- #### [安装基于 Python 的 Arctern 后台](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/installation.html#id1)
 
 - #### 安装 Jupyter
 
@@ -14,7 +14,7 @@
   
 - #### 安装依赖库
 
-  在 Conda 环境中执行以下命令安装相关依赖库：
+  在 `arctern_env ` 环境中执行以下命令安装相关依赖库：
 
   ```bash
   $ pip install keplergl pyshp sridentify
@@ -24,7 +24,7 @@
 
 ## 下载数据
 
-本文将介绍如何利用 Arctern 处理纽约出租车数据，并使用 keplergl 展示数据。需要下载 200 万条纽约出租车数据和纽约市的地形数据图，默认将其下载至 `/tmp` 下：
+本文将介绍如何利用 Arctern 处理纽约出租车数据，并使用 keplergl 展示数据。需要下载 20 万条纽约出租车数据和纽约市的地形数据图，默认将其下载至 `/tmp` 下：
 
 ```bash
 $ cd /tmp
@@ -39,7 +39,7 @@ $ unzip taxi_zones.zip
 
 ## 运行 jupyter-notebook
 
-下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 文件，在 Conda 环境中运行 jupyter notebook：
+下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 文件，在 `arctern_env ` 环境中运行 jupyter notebook：
 
 ```bash
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/arctern_nytaxi_bootcamp.ipynb
@@ -57,7 +57,7 @@ $ jupyter notebook
 
 ### 1. 数据预处理
 
-本文示例数据提取自纽约出租车中的 200 万条，当我们在处理大规模数据时通常会存在一些噪点数据，而这些噪点数据通常不易发现却又影响分析结果，那么如何快速发现噪点数据以及数据预处理就是我们分析数据的一个重点。
+本文示例数据提取自纽约出租车中的 20 万条，当我们在处理大规模数据时通常会存在一些噪点数据，而这些噪点数据通常不易发现却又影响分析结果，那么如何快速发现噪点数据以及数据预处理就是我们分析数据的一个重点。
 
 #### 1.1 数据加载
 
@@ -147,8 +147,8 @@ Length: 263, dtype: object
 from sridentify import Sridentify
 ident = Sridentify()
 ident.from_file('/tmp/taxi_zones.prj')
-ident.get_epsg()
-nyc_arctern_4326=arctern.ST_Transform(nyc_zone_arctern,'EPSG:2263','EPSG:4326')
+src_crs = ident.get_epsg()
+nyc_arctern_4326 = arctern.ST_Transform(nyc_zone_arctern,f'EPSG:{src_crs}','EPSG:4326')
 arctern.ST_AsText(nyc_arctern_4326)
 ```
 
@@ -186,11 +186,8 @@ KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc
 nyc_arctern_one = arctern.ST_Union_Aggr(nyc_arctern_4326)
 nyc_arctern_one = arctern.ST_SimplifyPreserveTopology(nyc_arctern_one,0.005)
 is_in_nyc = [arctern.ST_Within(point,nyc_arctern_one[0])[0] for point in pickup_points ]
-KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc_arctern_one)})})
 pickup_in_nyc = pickup_points[pd.Series(is_in_nyc)]
 ```
-
-<img src="./pic/nyc_shape_one_simple.png">
 
 绘制出数据过滤后的上车点：
 
@@ -305,4 +302,4 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_gt
 
 <img src="./pic/nyc_taxi_distance_gt_20km.png">
 
-同样我们发现直线距离大于 20 公里的，也都是从市中心触发去周边比较远的地方。综上我们完成了对出租车数据关于交易额和里程距离的分析，更多分析功能可以参考 **[Arctern API](https://arctern.io/docs/versions/v0.1.x/arctern-webdocs/development-doc-cn/html/python/api/api.html)**。
+同样我们发现直线距离大于 20 公里的，也都是从市中心触发去周边比较远的地方。综上我们完成了对出租车数据关于交易额和里程距离的分析，更多分析功能可以参考 **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/api/pandas_api/pandas_api.html)**。
