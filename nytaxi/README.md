@@ -29,9 +29,9 @@
 ```bash
 $ cd /tmp
 # 下载纽约出租车数据
-$ wget https://media.githubusercontent.com/media/zilliztech/arctern-resources/benchmarks/benchmarks/dataset/nyc_taxi/0_2M_nyc_taxi_and_building/0_2M_nyc_taxi_and_building.csv
+$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/0_2M_nyc_taxi_and_building.csv
 # 下载并解压纽约市的地形数据图
-$ wget https://s3.amazonaws.com/nyc-tlc/misc/taxi_zones.zip
+$ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/taxi_zones.zip
 $ unzip taxi_zones.zip
 ```
 
