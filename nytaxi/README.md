@@ -6,7 +6,7 @@
 
 - #### 安装 Jupyter
 
-  在上一步中的 `arctern_env ` 环境中执行以下命令安装 Jupyter：
+  在上一步中的 `arctern_env` 环境中执行以下命令安装 Jupyter：
 
   ```bash
   $ conda install -c conda-forge jupyterlab
@@ -14,7 +14,7 @@
   
 - #### 安装依赖库
 
-  在 `arctern_env ` 环境中执行以下命令安装相关依赖库：
+  在 `arctern_env` 环境中执行以下命令安装相关依赖库：
 
   ```bash
   $ pip install keplergl pyshp sridentify
@@ -39,7 +39,7 @@ $ unzip taxi_zones.zip
 
 ## 运行 jupyter-notebook
 
-下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 文件，在 `arctern_env ` 环境中运行 jupyter notebook：
+下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 文件，在 `arctern_env` 环境中运行 jupyter notebook：
 
 ```bash
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/arctern_nytaxi_bootcamp.ipynb
