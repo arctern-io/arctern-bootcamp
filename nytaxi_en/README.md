@@ -1,6 +1,8 @@
 # Analyzing NYC Taxi Dataset with Arctern
 
-## Environment requirements
+## Prerequisite
+  
+
 
 - #### [Install Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/standalone_installation.html)
 
@@ -22,9 +24,9 @@
 
 
 
-## Download data
+## Data Preparation
 
-We will introduce how to analyze NYC Taxi dataset with Arctern, and use keplergl to display the data. You need to download 200,000 New York taxi data and New York City topographic map. We are downloaded it to `/tmp` default:
+This tutorial will guide you through analyzing New York City Taxi dataset with Arctern and visualizing with keplergl. Please download the data prepared for this tutorial including: 200,000 New York City taxi data records and New York City topographic map. Save the data in `/tmp` by default:
 
 ```bash
 $ cd /tmp
@@ -37,9 +39,9 @@ $ unzip taxi_zones.zip
 
 
 
-## Starting jupyter-notebook
+## Initialize jupyter-notebook
 
-Download [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) ，running jupyter notebook in `arctern_env` environment：
+Download [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) ，start jupyter notebook with `arctern_env` environment：
 
 ```bash
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi_en/arctern_nytaxi_bootcamp.ipynb
@@ -47,11 +49,10 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 $ jupyter notebook
 ```
 
-Open arctern_nytaxi_bootcamp.ipynb in jupyter web, then you can run it.
+Open arctern_nytaxi_bootcamp.ipynb in jupyter notebook, then you can have fun with the example codes.
 
 
-
-## New York taxi data analysis
+## Introduce of the example codes
 
 Next, we will introduce how to use Arctern to analyze large-scale gis data, and combine Keplergl to display data, you can also run the [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) directly with jupyter.
 
