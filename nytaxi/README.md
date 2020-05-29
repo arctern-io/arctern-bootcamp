@@ -1,15 +1,17 @@
 # Arctern 助力分析纽约出租车数据
 
+本文将介绍如何利用 Arctern 处理大型地理空间数据，并使用 keplergl 进行数据可视化分析纽约市出租车数据集。
+
 ## 环境准备
 
-- #### [安装基于 Python 的 Arctern 后台](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/installation.html#id1)
+- #### [安装 Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/installation.html#id1)
 
 - #### 安装 Jupyter
 
-  在上一步中的 `arctern_env` 环境中执行以下命令安装 Jupyter：
+  在上一步中的 `arctern_env` 环境中执行以下命令安装 Jupyter Notebook：
 
   ```bash
-  $ conda install -c conda-forge jupyterlab
+  $ conda install -c conda-forge notebook
   ```
   
 - #### 安装依赖库
@@ -24,7 +26,7 @@
 
 ## 下载数据
 
-本文将介绍如何利用 Arctern 处理纽约出租车数据，并使用 keplergl 展示数据。需要下载 20 万条纽约出租车数据和纽约市的地形数据图，默认将其下载至 `/tmp` 下：
+我们需要下载 20 万条纽约出租车数据和纽约市的地形数据图数据，默认将其下载至 `/tmp` 下：
 
 ```bash
 $ cd /tmp
@@ -53,7 +55,7 @@ $ jupyter notebook
 
 ## 纽约出租车数据分析示例
 
-接下来将介绍如何利用 Arctern 处理大规模的 gis 数据，同时结合 Keplergl 展示数据，你也可以用 jupyter 直接运行 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 代码。
+接下来将介绍关于纽约出租车数据的数据清理和数据分析过程。
 
 ### 1. 数据预处理
 
@@ -61,11 +63,11 @@ $ jupyter notebook
 
 #### 1.1 数据加载
 
-首先根据数据集中各个字段的名称和数据类型，构建数据的 `schema` 并导入数据集，当然，你可以通过修改 `schema` 来导入你已有的数据。
+首先根据纽约出租车数据集中各个字段的名称和数据类型，构建数据的 `nyc_schema` 并导入数据。
 
 ```python
 import pandas as pd
-nyc_schame={
+nyc_schema={
     "VendorID":"string",
     "tpep_pickup_datetime":"string",
     "tpep_dropoff_datetime":"string",
@@ -84,14 +86,14 @@ nyc_schame={
     "buildingtext_dropoff":"string",
 }
 nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
-               dtype=nyc_schame,
+               dtype=nyc_schema,
                date_parser=pd.to_datetime,
                parse_dates=["tpep_pickup_datetime","tpep_dropoff_datetime"])
 ```
 
 #### 1.2 数据展示
 
-根据上面加载的数据 `schema` 可以看出我们本次处理的 gis 数据主要包括出租车辆的上车点和下车点的经纬度， 接下来将 Arctern 结合 keplergl 展示在地图上所有 gis 点位置，根据可视化结果可以看出数据集的一些情况。首先加载车辆的上车点数据：
+我们本次处理的 gis 数据主要包括出租车辆的上车点和下车点的经纬度， 接下来将 Arctern 结合 keplergl 展示在地图上所有 gis 点位置，根据可视化结果可以看出数据集的一些情况。首先加载车辆的上车点数据：
 
 ```python
 import arctern
@@ -166,7 +168,7 @@ KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc
 
 ##### 1.3.2 数据清洗
 
-为了分析纽约市区中的出租车数据，根据纽约市的地形图，我们认为不在图内的点即为噪点，以此过滤出租车数据中的噪点，首先我们根据纽约市区的轮廓图对上车点进行过滤：
+我们认为不在纽约市论库图内的点即为噪点，以此过滤出租车数据，首先我们根据纽约市区的轮廓图对上车点进行过滤：
 
 
 ```python
@@ -184,7 +186,7 @@ KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_As
 ```
 <img src="./pic/nyc_taxi_pickup_filted.png">
 
-我们知道纽约出租车数据中有上车点和下车点的经纬度数据，那么根据同样的方法，对乘客的下车点进行过滤：
+那么根据同样的方法，对乘客的下车点进行过滤：
 
 ```python
 # 该步骤会比较耗时
@@ -221,7 +223,7 @@ in_nyc_df.fare_amount.describe()
 
 ### 2. 数据分析
 
-前面我们将数据进行了清洗过滤，这一步十分重要，它可以保证我后期的数据分析结果有效。接下来我们将根据交易额和里程距离分析出租车的运营情况。
+数据过滤这一步十分重要，它可以保证我后期的数据分析结果有效。接下来我们将根据交易额和里程距离分析出租车的运营情况。
 
 #### 2.1 关于交易额
 

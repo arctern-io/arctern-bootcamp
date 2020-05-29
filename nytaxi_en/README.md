@@ -1,17 +1,17 @@
-# Analyzing NYC Taxi Dataset with Arctern
+# Analyzing New York City Taxi Dataset with Arctern
 
-This tutorial will guide you through analyzing New York City Taxi dataset with Arctern for massive GeoSpatical data processing and with keplergl for data visualizion. 
+This tutorial will guide you through analyzing New York City Taxi dataset with Arctern for massive  Geospatial data processing and with keplergl for data visualization. 
 
 ## Prerequisite
-  
+
 - #### [Install Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/standalone_installation.html)
 
-- #### Install Jupyter
+- #### Install Jupyter Notebook
 
-  Run the following command in the `artern_env` environment of the previous step to install Jupyter:
+  Run the following command in the `artern_env` environment of the previous step to install Jupyter Notebook:
 
   ```bash
-  $ conda install -c conda-forge jupyterlab
+  $ conda install -c conda-forge notebook
   ```
   
 - #### Install required libraries
@@ -30,7 +30,7 @@ Download the data prepared for this tutorial including: 200,000 New York City ta
 
 ```bash
 $ cd /tmp
-# Download NYC Taxi data
+# Download New York City Taxi data
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/0_2M_nyc_taxi_and_building.csv
 # Download and unzip the topographic map of New York
 $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/taxi_zones.zip
@@ -39,7 +39,7 @@ $ unzip taxi_zones.zip
 
 
 
-## Initialize jupyter-notebook
+## Initialize Jupyter Notebook
 
 Download [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) ，start jupyter notebook with `arctern_env` environment：
 
@@ -52,6 +52,7 @@ $ jupyter notebook
 Open arctern_nytaxi_bootcamp.ipynb in jupyter notebook, start to have fun with the example codes.
 
 
+
 ## Introduce of the example codes
 
 This example includes codes for data cleansing and data analyzing.
@@ -62,7 +63,7 @@ The data used in this tutorial is 200,000 records extracted from New York City t
 
 #### 1.1 Data loading
 
-At first step, define a schema "nyc_schema" to describe all column names and data types arccroding to the 200,000 records, then load these records into the dataframe.
+At first step, define a schema "nyc_schema" to describe all column names and data types according to the 200,000 records, then load these records into the dataframe.
 
 ```python
 import pandas as pd
@@ -85,7 +86,7 @@ nyc_schema={
     "buildingtext_dropoff":"string",
 }
 nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
-               dtype=nyc_schame,
+               dtype=nyc_schema,
                date_parser=pd.to_datetime,
                parse_dates=["tpep_pickup_datetime","tpep_dropoff_datetime"])
 ```
@@ -110,7 +111,7 @@ With the visualized results on the map, we can identify the noisy data easily, a
 
 #### 1.3 Data filter
 
-In order to get rid of the noisy data, we can filter the data according to the topographic map of New York City. The idea is that, if the pick-up or drop-off location is not within the New York City boundary, this rocord should be filtered. To do this, we also need to converted the New York City topographic map stored in the GeoJSON data format to "EPSG: 4326" geodetic coordinate system.
+In order to get rid of the noisy data, we can filter the data according to the topographic map of New York City. The idea is that, if the pick-up or drop-off location is not within the New York City boundary, this record should be filtered. To do this, we also need to converted the New York City topographic map stored in the GeoJSON data format to "EPSG: 4326" geodetic coordinate system.
 
 ##### 1.3.1 Data conversion
 
@@ -149,7 +150,7 @@ nyc_arctern_4326 = arctern.ST_Transform(nyc_zone_arctern,f'EPSG:{src_crs}','EPSG
 arctern.ST_AsText(nyc_arctern_4326)
 ```
 
-The is the results after coordinate system conversion:
+This is the results after coordinate system conversion:
 
 ```
 0    MULTIPOLYGON (((-73.8968088322377 40.795808445...
@@ -224,7 +225,7 @@ Until now, data is cleaned, we can continue to do the analysis.
 
 ### 2. Data analysis
 
-Cleaned up data ensures valid analysis results. Next, we will analyze the New York City taxi dataset for transaction amount and mileage distance.
+Cleaned up data ensures valid analysis results. Next, we will analyze the New York City taxi dataset for transaction amount and straight-line distance.
 
 #### 2.1 About amount
 
@@ -242,7 +243,7 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_50
 
 <img src="./pic/nyc_taxi_fare_gt_50.png">
 
-You can interative with the map by expand the small triangle in the upper left corner, such as hiding the pick-up or drop-off locations. We found that most trips with transaction amount greater than $50 are from the city center to farther away place.
+You can interactive with the map by expand the small triangle in the upper left corner, such as hiding the pick-up or drop-off locations. We found that most trips with transaction amount greater than $50 are from the city center to farther away place.
 
 #### 2.2 About distance
 
@@ -295,4 +296,4 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_gt
 
 We can see that trips with straight-line distances greater than 20 kilometers are also from the city center to a farther away place. 
 
-Now you have completed the analysis of NYC taxi data on transaction amount and straight-line distance, for more functions please refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/api/pandas_api/pandas_api.html)**。
+Now you have completed the analysis of New York City Taxi dataset on transaction amount and straight-line distance, for more functions please refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/api/pandas_api/pandas_api.html)**。
