@@ -12,9 +12,9 @@
   $ conda install -c conda-forge jupyterlab
   ```
   
-- #### Install requirements library
+- #### Install required libraries
 
-  Run the following command in the `arctern_env` environment to install requirements libraries:
+  Run the following command in the `arctern_env` environment to install required libraries:
 
   ```bash
   $ pip install keplergl pyshp sridentify
