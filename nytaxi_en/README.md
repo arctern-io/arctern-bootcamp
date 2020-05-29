@@ -58,7 +58,7 @@ This example includes codes for data cleansing and data analyzing.
 
 ### 1. Data cleansing
 
-The data used in this tutorial is 200,000 records extracted from New York City taxi dataset, however, noisy data is inevitable when dealing data with such scale. Noisy data can usually affect the results directly, so identifying and cleansing the noisy data efficitently is quite critical in data analyzing procedure.
+The data used in this tutorial is 200,000 records extracted from New York City taxi dataset, however, noisy data is inevitable when dealing data with such scale. Noisy data can usually affect the results directly, so identifying and cleansing the noisy data efficiently is quite critical in data analyzing procedure.
 
 #### 1.1 Data loading
 
@@ -92,7 +92,9 @@ nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
 
 #### 1.2 Data display
 
-According to above  table's `schema` , we can see this data mainly include longitude and latitude of up and down taxi. And we can use Arctern and keplergl to display all the gis points on the map, it can show us some issue. First loading the pick-up point:
+The data set includes longitude and latitude of pick-up and drop-off locations for each taxi trip. We can visualize all these locations on the map with Arctern and keplergl to get better understanding of the data. 
+
+First loading the pick-up locations:
 
 ```python
 import arctern
@@ -104,15 +106,15 @@ KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_As
 
 <img src="./pic/nyc_taxi_pickup_all.png">
 
-The map results support select and drag, we can see it has noisy data, because the pick-up point are painted on the sea. In fact, all the data should be concentrated on land. These noisy data need to clean and filter.
+With the visualized results on the map, we can identify the noisy data easily. As some of the pick-up locations are in the ocean, these noisy data need to be filtered.
 
 #### 1.3 Data filter
 
-In order to correctly analyze the NYC taxi data, we will filter the data according to the topographic map of New York City. The data that is not in the New York City map is regarded as noisy and needed filtered. This step will also introduce how to loaded GeoJSON data and converted it to "EPSG: 4326", which is the latitude and longitude coordinates.
+In order to get rid of the noisy data, we can filter the data according to the topographic map of New York City. The idea is that, if the pick-up or drop-off location is not within the New York City boundary, this rocord should be filtered. To do this, we also need to converted the New York City topographic map stored in the GeoJSON data format to "EPSG: 4326" geodetic coordinate system.
 
 ##### 1.3.1 Data convert
 
-Read the topographic data map of New York City. The topographic data is stored in GeoJSON format. First, use Arctern to load the GeoJSON data:
+Load the New York City topographic map from the GeoJSON file with Arctern:
 
 ```python
 import shapefile
@@ -125,7 +127,7 @@ nyc_zone_arctern=arctern.ST_GeomFromGeoJSON(nyc_zone_series)
 arctern.ST_AsText(nyc_zone_arctern)
 ```
 
-The results of the data read by Arctern are as follows:
+Display the loaded map data:
 
 ```
 0    MULTIPOLYGON (((-8226155.13045259 4982269.9492...
@@ -136,7 +138,7 @@ The results of the data read by Arctern are as follows:
 dtype: object
 ```
 
-Get the coordinate system of the current New York City topographic map, and use Arctern to convert the coordinate system to a latitude and longitude coordinate system, which is "EPSG: 4326":
+Get the current coordinate system of the New York City topographic map, and use Arctern to convert the coordinate system to "EPSG: 4326":
 
 ```python
 from sridentify import Sridentify
@@ -147,7 +149,7 @@ nyc_arctern_4326 = arctern.ST_Transform(nyc_zone_arctern,f'EPSG:{src_crs}','EPSG
 arctern.ST_AsText(nyc_arctern_4326)
 ```
 
-The is the results after coordinate conversion:
+The is the results after coordinate system conversion:
 
 ```
 0    MULTIPOLYGON (((-73.8968088322377 40.795808445...
@@ -157,8 +159,7 @@ The is the results after coordinate conversion:
 4    MULTIPOLYGON (((-74.0109284126803 40.684491472...
 dtype: object
 ```
-
-According to the converted latitude and longitude coordinates, the topographic map of New York City is drawn as follows:
+With the converted latitude and longitude coordinates, the topographic map of New York City is rendered as follows:
 
 ```python
 KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc_arctern_4326)})})
@@ -167,7 +168,7 @@ KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc
 
 ##### 1.3.2 Data cleaning
 
-In order to analyze the taxi data in the New York City area, according to the topographic map of New York City, we see that the points that are not in the map are noise. In order to filter the noisy data, first we filter the pick-up points based on the skeleton map of New York City:
+In order to clean up the noisy data, we can filter out records with pick-up locations outside the skeleton map of New York City.
 
 
 ```python
@@ -178,14 +179,14 @@ is_in_nyc = arctern.ST_Within(pickup_points,nyc_arctern_one[0])
 pickup_in_nyc = pickup_points[pd.Series(is_in_nyc)]
 ```
 
-Display the pick-up point after data filtering:
+Display the pick-up locations after filtering.
 
 ```python
 KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_AsText(pickup_in_nyc)})})
 ```
 <img src="./pic/nyc_taxi_pickup_filted.png">
 
-We know that there are latitude and longitude data of the pick-up point and the drop-off point in the New York taxi data, then according to the same method, filter the drop-off point:
+Filter these data by the drop-off locations.
 
 ```python
 # this step will cost some time
@@ -197,7 +198,7 @@ KeplerGl(data={"drop_points": pd.DataFrame(data={'drop_points':arctern.ST_AsText
 <img src="./pic/nyc_taxi_dropoff_filted.png">
 
 
-According to the latitude and longitude data of the pick-up point and the drop-off point, filter all noisy data on the dataset:
+To clean all noisy data, we can filter data with both pick-up locations and the drop-off locations:
 
 
 ```python
@@ -206,7 +207,7 @@ in_nyc_df=nyc_df[pd.Series(is_resonable)]
 in_nyc_df.fare_amount.describe()
 ```
 
-The descriptive information about the travel cost of the filtered data is:
+The summarized travel cost information for the filtered data:
 
 
     count    192805.000000
@@ -218,11 +219,12 @@ The descriptive information about the travel cost of the filtered data is:
     75%          11.300000
     max         175.000000
     Name: fare_amount, dtype: float64
-In summary, we have completed data filtering. Based on the preprocessed data, we will analyze the NYC  taxi data.
+
+Until now, data is cleaned, we can continue to do the analysis. 
 
 ### 2. Data analysis
 
-We cleaned and filtered the data, this step is very important, it can ensure that the analysis results are valid. Next, we will analyze the NYC taxi dataset based on the transaction amount and mileage distance.
+Cleaned up data ensures valid analysis results. Next, we will analyze the New York City taxi dataset for transaction amount and mileage distance.
 
 #### 2.1 About amount
 
