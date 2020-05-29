@@ -106,7 +106,7 @@ KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_As
 
 <img src="./pic/nyc_taxi_pickup_all.png">
 
-With the visualized results on the map, we can identify the noisy data easily. As some of the pick-up locations are in the ocean, these noisy data need to be filtered.
+With the visualized results on the map, we can identify the noisy data easily, as some of the pick-up locations are in the ocean. These noisy data need to be filtered.
 
 #### 1.3 Data filter
 
