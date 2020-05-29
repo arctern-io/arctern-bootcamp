@@ -94,7 +94,7 @@ nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
 
 The data set includes longitude and latitude of pick-up and drop-off locations for each taxi trip. We can visualize all these locations on the map with Arctern and keplergl to get better understanding of the data. 
 
-First loading the pick-up locations:
+Load the pick-up locations:
 
 ```python
 import arctern
@@ -112,7 +112,7 @@ With the visualized results on the map, we can identify the noisy data easily, a
 
 In order to get rid of the noisy data, we can filter the data according to the topographic map of New York City. The idea is that, if the pick-up or drop-off location is not within the New York City boundary, this rocord should be filtered. To do this, we also need to converted the New York City topographic map stored in the GeoJSON data format to "EPSG: 4326" geodetic coordinate system.
 
-##### 1.3.1 Data convert
+##### 1.3.1 Data conversion
 
 Load the New York City topographic map from the GeoJSON file with Arctern:
 
@@ -228,7 +228,7 @@ Cleaned up data ensures valid analysis results. Next, we will analyze the New Yo
 
 #### 2.1 About amount
 
-We extract data with fees greater than $50 according to the transaction amount, and plot taxi pick-up and drop-off points:
+Plot pick-up and drop-off locations with transaction amount greater than $50:
 
 
 ```python
@@ -242,11 +242,11 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_50
 
 <img src="./pic/nyc_taxi_fare_gt_50.png">
 
-You can expand the small triangle in the upper left corner of the result map to operate the current layer, such as hiding the pick-up point or the drop-off point. We found that the cost is greater than 50 US dollars, which is triggered from the city center to a place farther away .
+You can interative with the map by expand the small triangle in the upper left corner, such as hiding the pick-up or drop-off locations. We found that most trips with transaction amount greater than $50 are from the city center to farther away place.
 
 #### 2.2 About distance
 
-We can also calculate the straight-line distance between the pick-up point and the drop-off point:
+Calculate the straight-line distance between the pick-up and the drop-off locations:
 
 
 ```python
@@ -257,7 +257,7 @@ nyc_distance=arctern.ST_DistanceSphere(arctern.ST_Point(in_nyc_df.pickup_longitu
 nyc_distance.index=in_nyc_df.index
 nyc_distance.describe()
 ```
-The linear distance of the taxi is described as:
+The straight-line distance summary for all the trips:
 
 
 ```
@@ -272,7 +272,7 @@ The linear distance of the taxi is described as:
     dtype: float64
 ```
 
-Get the points with a straight-line distance greater than 20 kilometers, and draw all pick-up and drop-off points with a straight-line distance greater than 20 kilometers:
+Get the pick-up and the drop-off locations for trips with a straight-line distance greater than 20 kilometers, and plot them.
 
 ```python
 nyc_with_distance=pd.DataFrame({"pickup_longitude":in_nyc_df.pickup_longitude,
@@ -293,4 +293,6 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_gt
 
 <img src="./pic/nyc_taxi_distance_gt_20km.png">
 
-Similarly, we found that straight-line distances greater than 20 kilometers are also triggered from the city center to a place farther away. In summary, we have completed the analysis of NYC taxi data on transaction amount and straight-line distance, more analysis functions can refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/api/pandas_api/pandas_api.html)**。
+We can see that trips with straight-line distances greater than 20 kilometers are also from the city center to a farther away place. 
+
+Now you have completed the analysis of NYC taxi data on transaction amount and straight-line distance, for more functions please refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/api/pandas_api/pandas_api.html)**。
