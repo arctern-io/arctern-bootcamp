@@ -58,15 +58,15 @@ This example includes codes for data cleansing and data analyzing.
 
 ### 1. Data cleansing
 
-The sample data we used is extracted 200,000 from New York taxi record data. When we deal with large-scale data, there is usually some noisy data, and these noisy data are not easy to find but affect the results directly. So how to quickly find noisy data and data preprocessing is a key point in analysis.
+The data used in this tutorial is 200,000 records extracted from New York City taxi dataset, however, noisy data is inevitable when dealing data with such scale. Noisy data can usually affect the results directly, so identifying and cleansing the noisy data efficitently is quite critical in data analyzing procedure.
 
 #### 1.1 Data loading
 
-First of all, you can define a table's  `schema` to describe all column names and their types . Of course, you can modify the ` schema` to load your own data.
+At first step, define a schema "nyc_schema" to describe all column names and data types arccroding to the 200,000 records, then load these records into the dataframe.
 
 ```python
 import pandas as pd
-nyc_schame={
+nyc_schema={
     "VendorID":"string",
     "tpep_pickup_datetime":"string",
     "tpep_dropoff_datetime":"string",
@@ -92,7 +92,7 @@ nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
 
 #### 1.2 Data display
 
-According above  table's `schema` , we can see this data mainly include longitude and latitude of up and down taxi. And we can use Arctern and keplergl to display all the gis points on the map, it can show us some issue. First loading the pick-up point:
+According to above  table's `schema` , we can see this data mainly include longitude and latitude of up and down taxi. And we can use Arctern and keplergl to display all the gis points on the map, it can show us some issue. First loading the pick-up point:
 
 ```python
 import arctern
