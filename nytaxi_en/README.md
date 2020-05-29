@@ -1,9 +1,9 @@
 # Analyzing NYC Taxi Dataset with Arctern
 
+This tutorial will guide you through analyzing New York City Taxi dataset with Arctern for massive GeoSpatical data processing and with keplergl for data visualizion. 
+
 ## Prerequisite
   
-
-
 - #### [Install Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/standalone_installation.html)
 
 - #### Install Jupyter
@@ -26,7 +26,7 @@
 
 ## Data Preparation
 
-This tutorial will guide you through analyzing New York City Taxi dataset with Arctern and visualizing with keplergl. Please download the data prepared for this tutorial including: 200,000 New York City taxi data records and New York City topographic map. Save the data in `/tmp` by default:
+Download the data prepared for this tutorial including: 200,000 New York City taxi data records and New York City topographic map. Save the data in `/tmp` by default:
 
 ```bash
 $ cd /tmp
@@ -49,14 +49,14 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 $ jupyter notebook
 ```
 
-Open arctern_nytaxi_bootcamp.ipynb in jupyter notebook, then you can have fun with the example codes.
+Open arctern_nytaxi_bootcamp.ipynb in jupyter notebook, start to have fun with the example codes.
 
 
 ## Introduce of the example codes
 
-Next, we will introduce how to use Arctern to analyze large-scale gis data, and combine Keplergl to display data, you can also run the [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) directly with jupyter.
+This example includes codes for data cleansing and data analyzing.
 
-### 1. Data preprocessing
+### 1. Data cleansing
 
 The sample data we used is extracted 200,000 from New York taxi record data. When we deal with large-scale data, there is usually some noisy data, and these noisy data are not easy to find but affect the results directly. So how to quickly find noisy data and data preprocessing is a key point in analysis.
 
