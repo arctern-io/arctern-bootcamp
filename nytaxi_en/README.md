@@ -35,6 +35,10 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 # Download and unzip the topographic map of New York
 $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/taxi_zones.zip
 $ unzip -d taxi_zones taxi_zones.zip
+# Download New York City road network data
+$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/nyc_road.csv
+# Download kepler config file
+$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/map_config.json
 ```
 
 
@@ -233,6 +237,80 @@ The summarized travel cost information for the filtered data:
     max         175.000000
     Name: fare_amount, dtype: float64
 
+After filtering the data according to the skeleton map of New York City, we found that some locations were far from the road, and even plotted on certain buildings:
+
+```python
+import json
+with open("/tmp/map_config.json", "r") as f:
+    config = json.load(f)
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(pickup_in_nyc)})},config=config)
+```
+<img src="./pic/nyc_taxi_pickup_filted_small_zone.png">
+
+We think that the data farther away from the road is noisy data, which is more than 100 meters from the road. So we have to filter the noisy data by the New York City road network.
+
+First load the New York City road network:
+
+```python
+import arctern
+nyc_road=pd.read_csv("/tmp/nyc_road.csv", dtype={"roads":"string"}, delimiter='|')
+roads=arctern.ST_GeomFromText(nyc_road.roads)
+```
+
+ Filter data with both pick-up locations and the drop-off locations:
+
+```python
+pickup_points = arctern.ST_Point(in_nyc_df.pickup_longitude,in_nyc_df.pickup_latitude)
+dropoff_points = arctern.ST_Point(in_nyc_df.dropoff_longitude,in_nyc_df.dropoff_latitude)
+is_pickup_near_road = arctern.near_road(roads, pickup_points)
+is_dropoff_near_road = arctern.near_road(roads, dropoff_points)
+is_resonable = [is_pickup_near_road[idx] & is_dropoff_near_road[idx] for idx in range(0,len(is_dropoff_near_road)) ]
+in_nyc_df=in_nyc_df.reset_index()
+on_road_nyc_df=in_nyc_df[pd.Series(is_resonable)]
+```
+
+After filtering out the data far away from the road, we bind the pick-up location to the nearest road to generate a new pick-up location within the road :
+
+```python
+pickup_points = arctern.ST_Point(on_road_nyc_df.pickup_longitude,on_road_nyc_df.pickup_latitude)
+projectioned_pickup = arctern.nearest_location_on_road(roads, pickup_points)
+```
+
+Plot the pick-up location within the road:
+
+```python
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(projectioned_pickup)})},config=config)
+```
+<img src="./pic/nyc_taxi_pickup_on_road.png">
+
+Bind the drop-off location to the nearest road to generate a new drop-off location within the road :
+
+```python
+dropoff_points = arctern.ST_Point(on_road_nyc_df.dropoff_longitude,on_road_nyc_df.dropoff_latitude)
+projectioned_dropoff = arctern.nearest_location_on_road(roads, dropoff_points)
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(projectioned_dropoff)})},config=config)
+```
+<img src="./pic/nyc_taxi_dropoff_on_road.png">
+
+After bind the pick-up location and drop-off loaction to the road, add the information to dataframe near_road_df:
+
+```python
+on_road_nyc_df.insert(16,'pickup_on_road',projectioned_pickup)
+on_road_nyc_df.insert(17,'dropoff_on_road',projectioned_dropoff)
+on_road_nyc_df.fare_amount.describe()
+```
+
+The summarized travel cost information for the filtered data:
+
+    count    194812.000000
+    mean          9.692408
+    std           6.976446
+    min           2.500000
+    25%           5.700000
+    50%           7.700000
+    75%          11.000000
+    max         175.000000
+    Name: fare_amount, dtype: float64
 Until now, data is cleaned, we can continue to do the analysis. 
 
 ### 2. Data analysis
@@ -274,15 +352,15 @@ The straight-line distance summary for all the trips:
 
 
 ```
-    count    192805.000000
-    mean       3150.931171
-    std        3326.144461
-    min           0.000000
-    25%        1224.998626
-    50%        2088.286128
-    75%        3753.104118
-    max       35395.487197
-    dtype: float64
+count    194155.000000
+mean       3114.627009
+std        3233.474564
+min           0.000000
+25%        1224.656797
+50%        2088.272336
+75%        3733.545547
+max       35418.698339
+dtype: float64
 ```
 
 Get the pick-up and the drop-off locations for trips with a straight-line distance greater than 20 kilometers, and plot them.

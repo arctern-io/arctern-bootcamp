@@ -245,7 +245,7 @@ KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arc
 ```
 <img src="./pic/nyc_taxi_pickup_filted_small_zone.png">
 
-我们认为离道路较远的数据同样为噪点（默认离道路距离大于100m视为较远），通过匹配纽约市的道路网将偏离道路较远的租车数据过滤掉，首先加载纽约市道路网：
+我们认为离道路较远的数据同样为噪点（默认离道路距离大于 100m 视为较远），通过匹配纽约市的道路网将偏离道路较远的租车数据过滤掉，首先加载纽约市道路网：
 ```python
 import arctern
 nyc_road=pd.read_csv("/tmp/nyc_road.csv", dtype={"roads":"string"}, delimiter='|')
@@ -292,9 +292,9 @@ on_road_nyc_df.fare_amount.describe()
 
 过滤后的数据关于行程费用的描述信息为：
 
-    count    192264.000000
-    mean          9.691192
-    std           6.984912
+    count    194812.000000
+    mean          9.692408
+    std           6.976446
     min           2.500000
     25%           5.700000
     50%           7.700000
@@ -337,15 +337,15 @@ nyc_distance.describe()
 
 
 ```
-    count    192805.000000
-    mean       3150.931171
-    std        3326.144461
-    min           0.000000
-    25%        1224.998626
-    50%        2088.286128
-    75%        3753.104118
-    max       35395.487197
-    dtype: float64
+count    194155.000000
+mean       3114.627009
+std        3233.474564
+min           0.000000
+25%        1224.656797
+50%        2088.272336
+75%        3733.545547
+max       35418.698339
+dtype: float64
 ```
 
 获得直线距离大于 20 公里的点，并绘制所有直线距离大于 20 公里的上车点和下车点：
