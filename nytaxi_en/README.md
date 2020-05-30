@@ -243,7 +243,7 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_50
 
 <img src="./pic/nyc_taxi_fare_gt_50.png">
 
-You can interactive with the map by expand the small triangle in the upper left corner, such as hiding the pick-up or drop-off locations. We found that most trips with transaction amount greater than $50 are from the city center to farther away place.
+You can interactive with the map by expand the small triangle in the upper left corner, such as hiding the pick-up or drop-off locations. We can see that most trips with transaction amount greater than $50 are from the city center to far away places.
 
 #### 2.2 About distance
 
@@ -294,6 +294,6 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_gt
 
 <img src="./pic/nyc_taxi_distance_gt_20km.png">
 
-We can see that trips with straight-line distances greater than 20 kilometers are also from the city center to a farther away place. 
+We can see that trips with straight-line distances greater than 20 kilometers are also from the city center to far away places. 
 
 Now you have completed the analysis of New York City Taxi dataset on transaction amount and straight-line distance, for more functions please refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/api/pandas_api/pandas_api.html)**。
