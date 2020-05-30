@@ -63,7 +63,7 @@ The data used in this tutorial is 200,000 records extracted from New York City t
 
 #### 1.1 Data loading
 
-At first step, define a schema "nyc_schema" to describe all column names and data types according to the 200,000 records, then load these records into the dataframe.
+As first step, define a schema "nyc_schema" to describe all column names and data types according to the 200,000 records, then load these records into the dataframe.
 
 ```python
 import pandas as pd
