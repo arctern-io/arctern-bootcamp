@@ -36,7 +36,9 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/taxi_zones.zip
 $ unzip -d taxi_zones taxi_zones.zip
 # 下载纽约市的道路网数据
-$ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/nyc_road.csv
+$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/nyc_road.csv
+# 下载 kepler 配置文件
+$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/map_config.json
 ```
 
 
@@ -237,7 +239,7 @@ in_nyc_df.fare_amount.describe()
 根据纽约市轮廓图对租车数据过滤后，我们发现很多上车点的位置和道路有一些偏差，甚至偏离到某些建筑物内：
 ```python
 import json
-with open("map_config.json", "r") as f:
+with open("/tmp/map_config.json", "r") as f:
     config = json.load(f)
 KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(pickup_in_nyc)})},config=config)
 ```
@@ -303,7 +305,7 @@ on_road_nyc_df.fare_amount.describe()
 
 ### 2. 数据分析
 
-数据过滤这一步十分重要，它可以保证我后期的数据分析结果有效。接下来我们将根据交易额和里程距离分析出租车的运营情况。
+数据过滤这一步十分重要，它可以保证我后期的数据分析结果有效。接下来我们将根据交易额和直线距离分析出租车的运营情况。
 
 #### 2.1 关于交易额
 
