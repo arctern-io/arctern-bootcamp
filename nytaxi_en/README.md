@@ -290,7 +290,7 @@ KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arc
 ```
 <img src="./pic/nyc_taxi_dropoff_on_road.png">
 
-After bind the pick-up location and drop-off loaction to the road, add the information to dataframe near_road_df:
+After bind the pick-up location and drop-off loaction to the road, add the information to  on_road_nyc_df:
 
 ```python
 on_road_nyc_df.insert(16,'pickup_on_road',projectioned_pickup)

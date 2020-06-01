@@ -281,7 +281,7 @@ KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arc
 ```
 <img src="./pic/nyc_taxi_dropoff_on_road.png">
 
-将绑路后的乘客上下车位置信息添加到 dataframe near_road_df 中：
+将绑路后的乘客上下车位置信息添加到 on_road_nyc_df 中：
 ```python
 on_road_nyc_df.insert(16,'pickup_on_road',projectioned_pickup)
 on_road_nyc_df.insert(17,'dropoff_on_road',projectioned_dropoff)
