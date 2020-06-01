@@ -188,7 +188,6 @@ KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc
 
 
 ```python
-# 该步骤会比较耗时
 index_nyc = arctern.sjoin(pickup_points, nyc_arctern_4326, 'within')
 is_in_nyc = index_nyc.map(lambda x: x >= 0)
 pickup_in_nyc = pickup_points[pd.Series(is_in_nyc)]
@@ -204,7 +203,6 @@ KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_As
 那么根据同样的方法，对乘客的下车点进行过滤：
 
 ```python
-# 该步骤会比较耗时
 dropoff_points = arctern.ST_Point(nyc_df.dropoff_longitude,nyc_df.dropoff_latitude)
 index_nyc = arctern.sjoin(dropoff_points, nyc_arctern_4326, 'within')
 is_dorpoff_in_nyc = index_nyc.map(lambda x: x >= 0)
