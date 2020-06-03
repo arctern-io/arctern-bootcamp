@@ -101,10 +101,11 @@ nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
 
 ```python
 import arctern
+from arctern import GeoSeries
 from keplergl import KeplerGl
 
-pickup_points = arctern.ST_Point(nyc_df.pickup_longitude,nyc_df.pickup_latitude)
-KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_AsText(pickup_points)})})
+pickup_points = GeoSeries.point(nyc_df.pickup_longitude,nyc_df.pickup_latitude)
+KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':pickup_points.to_wkt()})})
 ```
 
 <img src="./pic/nyc_taxi_pickup_all.png">
@@ -122,12 +123,14 @@ KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_As
 ```python
 import shapefile
 import json
+# 读取纽约市的地形数据图
 nyc_shape = shapefile.Reader("/tmp/taxi_zones/taxi_zones.shp")
 nyc_zone=[ shp.shape.__geo_interface__  for shp in nyc_shape.shapeRecords()]
 nyc_zone=[json.dumps(shp) for shp in nyc_zone]
+# 使用 Arctern 读取数据
 nyc_zone_series=pd.Series(nyc_zone)
-nyc_zone_arctern=arctern.ST_GeomFromGeoJSON(nyc_zone_series)
-arctern.ST_AsText(nyc_zone_arctern)
+nyc_zone_arctern=GeoSeries.geom_from_geojson(nyc_zone_series)
+nyc_zone_arctern.to_wkt()
 ```
 
 Arctern 读取的数据结果如下：
@@ -154,8 +157,9 @@ from sridentify import Sridentify
 ident = Sridentify()
 ident.from_file('/tmp/taxi_zones/taxi_zones.prj')
 src_crs = ident.get_epsg()
-nyc_arctern_4326 = arctern.ST_Transform(nyc_zone_arctern,f'EPSG:{src_crs}','EPSG:4326')
-arctern.ST_AsText(nyc_arctern_4326)
+nyc_zone_arctern.set_crs(f'EPSG:{src_crs}')
+nyc_arctern_4326 = nyc_zone_arctern.to_crs(crs="EPSG:4326")
+nyc_arctern_4326.to_wkt()
 ```
 
 坐标转换后的结果如下：
@@ -178,7 +182,7 @@ Length: 263, dtype: object
 根据转换后的经纬度坐标，绘制的纽约市地形图如下：
 
 ```python
-KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc_arctern_4326)})})
+KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':nyc_arctern_4326.to_wkt()})})
 ```
 <img src="./pic/nyc_shape_all.png">
 
@@ -188,26 +192,26 @@ KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc
 
 
 ```python
-index_nyc = arctern.sjoin(pickup_points, nyc_arctern_4326, 'within')
-is_in_nyc = index_nyc.map(lambda x: x >= 0)
+index_nyc = arctern.within_which(pickup_points, nyc_arctern_4326)
+is_in_nyc = index_nyc.map(lambda x: x  is not pd.NA )
 pickup_in_nyc = pickup_points[pd.Series(is_in_nyc)]
 ```
 
 绘制出数据过滤后的上车点：
 
 ```python
-KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_AsText(pickup_in_nyc)})})
+KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':pickup_in_nyc.to_wkt()})})
 ```
 <img src="./pic/nyc_taxi_pickup_filted.png">
 
 那么根据同样的方法，对乘客的下车点进行过滤：
 
 ```python
-dropoff_points = arctern.ST_Point(nyc_df.dropoff_longitude,nyc_df.dropoff_latitude)
-index_nyc = arctern.sjoin(dropoff_points, nyc_arctern_4326, 'within')
-is_dorpoff_in_nyc = index_nyc.map(lambda x: x >= 0)
+dropoff_points = GeoSeries.point(nyc_df.dropoff_longitude,nyc_df.dropoff_latitude)
+index_nyc = arctern.within_which(dropoff_points, nyc_arctern_4326)
+is_dorpoff_in_nyc = index_nyc.map(lambda x: x is not pd.NA)
 dropoff_in_nyc=dropoff_points[is_dorpoff_in_nyc]
-KeplerGl(data={"drop_points": pd.DataFrame(data={'drop_points':arctern.ST_AsText(dropoff_in_nyc)})})
+KeplerGl(data={"drop_points": pd.DataFrame(data={'drop_points':dropoff_in_nyc.to_wkt()})})
 ```
 <img src="./pic/nyc_taxi_dropoff_filted.png">
 
@@ -216,8 +220,7 @@ KeplerGl(data={"drop_points": pd.DataFrame(data={'drop_points':arctern.ST_AsText
 
 
 ```python
-is_resonable = [is_dorpoff_in_nyc[idx] & is_in_nyc[idx] for idx in range(0,len(is_in_nyc)) ]
-in_nyc_df=nyc_df[pd.Series(is_resonable)]
+in_nyc_df=nyc_df[is_in_nyc & is_dorpoff_in_nyc]
 in_nyc_df.fare_amount.describe()
 ```
 
@@ -239,7 +242,7 @@ in_nyc_df.fare_amount.describe()
 import json
 with open("/tmp/map_config.json", "r") as f:
     config = json.load(f)
-KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(pickup_in_nyc)})},config=config)
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':pickup_in_nyc.to_wkt()})},config=config)
 ```
 <img src="./pic/nyc_taxi_pickup_filted_small_zone.png">
 
@@ -247,13 +250,13 @@ KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arc
 ```python
 import arctern
 nyc_road=pd.read_csv("/tmp/nyc_road.csv", dtype={"roads":"string"}, delimiter='|')
-roads=arctern.ST_GeomFromText(nyc_road.roads)
+roads=GeoSeries(nyc_road.roads)
 ```
 
 然后根据纽约市的道路网对上车点和下车点进行过滤：
 ```python
-pickup_points = arctern.ST_Point(in_nyc_df.pickup_longitude,in_nyc_df.pickup_latitude)
-dropoff_points = arctern.ST_Point(in_nyc_df.dropoff_longitude,in_nyc_df.dropoff_latitude)
+pickup_points = GeoSeries.point(in_nyc_df.pickup_longitude,in_nyc_df.pickup_latitude)
+dropoff_points = GeoSeries.point(in_nyc_df.dropoff_longitude,in_nyc_df.dropoff_latitude)
 is_pickup_near_road = arctern.near_road(roads, pickup_points)
 is_dropoff_near_road = arctern.near_road(roads, dropoff_points)
 is_resonable = [is_pickup_near_road[idx] & is_dropoff_near_road[idx] for idx in range(0,len(is_dropoff_near_road)) ]
@@ -263,21 +266,23 @@ on_road_nyc_df=in_nyc_df[pd.Series(is_resonable)]
 
 过滤距离道路较远的租车数据之后，我们将上车点绑定到最近的道路上，生成新的上车点：
 ```python
-pickup_points = arctern.ST_Point(on_road_nyc_df.pickup_longitude,on_road_nyc_df.pickup_latitude)
+pickup_points = GeoSeries.point(on_road_nyc_df.pickup_longitude,on_road_nyc_df.pickup_latitude)
 projectioned_pickup = arctern.nearest_location_on_road(roads, pickup_points)
+projectioned_pickup = GeoSeries(projectioned_pickup)
 ```
 
 绘制出数据绑定道路后的上车点：
 ```python
-KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(projectioned_pickup)})},config=config)
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':projectioned_pickup.to_wkt()})},config=config)
 ```
 <img src="./pic/nyc_taxi_pickup_on_road.png">
 
 根据同样的方法，将乘客下车点绑定到最近的道路上，生成新的下车点：
 ```python
-dropoff_points = arctern.ST_Point(on_road_nyc_df.dropoff_longitude,on_road_nyc_df.dropoff_latitude)
+dropoff_points = GeoSeries.point(on_road_nyc_df.dropoff_longitude,on_road_nyc_df.dropoff_latitude)
 projectioned_dropoff = arctern.nearest_location_on_road(roads, dropoff_points)
-KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(projectioned_dropoff)})},config=config)
+projectioned_dropoff = GeoSeries(projectioned_dropoff)
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':projectioned_dropoff.to_wkt()})},config=config)
 ```
 <img src="./pic/nyc_taxi_dropoff_on_road.png">
 
@@ -312,8 +317,8 @@ on_road_nyc_df.fare_amount.describe()
 
 ```python
 fare_amount_gt_50 = on_road_nyc_df[on_road_nyc_df.fare_amount > 50]
-KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(fare_amount_gt_50.pickup_on_road)}),
-               "dropoff":pd.DataFrame(data={'dropoff':arctern.ST_AsText(fare_amount_gt_50.dropoff_on_road)})
+KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':fare_amount_gt_50.pickup_on_road.to_wkt()}),
+               "dropoff":pd.DataFrame(data={'dropoff':fare_amount_gt_50.dropoff_on_road.to_wkt()})
               })
 ```
 
@@ -327,8 +332,9 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(fare_amou
 
 
 ```python
-nyc_distance=arctern.ST_DistanceSphere(on_road_nyc_df.pickup_on_road, on_road_nyc_df.dropoff_on_road)
-nyc_distance.index=on_road_nyc_df.index
+on_road_nyc_df.pickup_on_road.set_crs("EPSG:4326")
+on_road_nyc_df.dropoff_on_road.set_crs("EPSG:4326")
+nyc_distance=on_road_nyc_df.pickup_on_road.distance_sphere(on_road_nyc_df.dropoff_on_road)
 nyc_distance.describe()
 ```
 车辆的直线距离结果描述为：
@@ -355,8 +361,8 @@ nyc_with_distance=pd.DataFrame({"pickup":on_road_nyc_df.pickup_on_road,
                                })
 
 nyc_dist_gt = nyc_with_distance[nyc_with_distance.sphere_distance > 20e3]
-KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(nyc_dist_gt.pickup)}),
-               "dropoff":pd.DataFrame(data={'dropoff':arctern.ST_AsText(nyc_dist_gt.dropoff)})
+KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':nyc_dist_gt.pickup.to_wkt()}),
+               "dropoff":pd.DataFrame(data={'dropoff':nyc_dist_gt.dropoff.to_wkt()})
               })
 ```
 
