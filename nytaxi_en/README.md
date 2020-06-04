@@ -262,18 +262,23 @@ roads=GeoSeries(nyc_road.roads)
 
 ```python
 pickup_points = GeoSeries.point(in_nyc_df.pickup_longitude,in_nyc_df.pickup_latitude)
+pickup_points.set_axis(in_nyc_df.index,inplace=True)
 dropoff_points = GeoSeries.point(in_nyc_df.dropoff_longitude,in_nyc_df.dropoff_latitude)
+dropoff_points.set_axis(in_nyc_df.index,inplace=True)
+
 is_pickup_near_road = arctern.near_road(roads, pickup_points)
 is_dropoff_near_road = arctern.near_road(roads, dropoff_points)
-is_resonable = [is_pickup_near_road[idx] & is_dropoff_near_road[idx] for idx in range(0,len(is_dropoff_near_road)) ]
-in_nyc_df=in_nyc_df.reset_index()
-on_road_nyc_df=in_nyc_df[pd.Series(is_resonable)]
+
+is_near_road = is_pickup_near_road & is_dropoff_near_road
+
+on_road_nyc_df = in_nyc_df[is_near_road]
 ```
 
 After filtering out the data far away from the road, we bind the pick-up location to the nearest road to generate a new pick-up location within the road :
 
 ```python
 pickup_points = GeoSeries.point(on_road_nyc_df.pickup_longitude,on_road_nyc_df.pickup_latitude)
+pickup_points.set_axis(on_road_nyc_df.index,inplace=True)
 projectioned_pickup = arctern.nearest_location_on_road(roads, pickup_points)
 projectioned_pickup = GeoSeries(projectioned_pickup)
 ```
@@ -289,6 +294,7 @@ Bind the drop-off location to the nearest road to generate a new drop-off locati
 
 ```python
 dropoff_points = GeoSeries.point(on_road_nyc_df.dropoff_longitude,on_road_nyc_df.dropoff_latitude)
+dropoff_points.set_axis(on_road_nyc_df.index,inplace=True)
 projectioned_dropoff = arctern.nearest_location_on_road(roads, dropoff_points)
 projectioned_dropoff = GeoSeries(projectioned_dropoff)
 KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':projectioned_dropoff.to_wkt()})},config=config)
@@ -305,9 +311,9 @@ on_road_nyc_df.fare_amount.describe()
 
 The summarized travel cost information for the filtered data:
 
-    count    194812.000000
-    mean          9.692408
-    std           6.976446
+    count    194786.000000
+    mean          9.692384
+    std           6.976573
     min           2.500000
     25%           5.700000
     50%           7.700000
@@ -351,13 +357,13 @@ The straight-line distance summary for all the trips:
 
 
 ```
-count    194155.000000
-mean       3114.627009
-std        3233.474564
+count    194786.000000
+mean       3113.344497
+std        3232.008220
 min           0.000000
-25%        1224.656797
-50%        2088.272336
-75%        3733.545547
+25%        1224.650347
+50%        2087.753029
+75%        3730.790193
 max       35418.698339
 dtype: float64
 ```
