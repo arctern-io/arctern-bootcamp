@@ -194,7 +194,7 @@ In order to clean up the noisy data, we can filter out records with pick-up loca
 
 ```python
 index_nyc = arctern.within_which(pickup_points, nyc_arctern_4326)
-is_in_nyc = index_nyc.map(lambda x: x  is not pd.NA )
+is_in_nyc = index_nyc.notna()
 pickup_in_nyc = pickup_points[pd.Series(is_in_nyc)]
 ```
 
@@ -210,7 +210,7 @@ Filter these data by the drop-off locations.
 ```python
 dropoff_points = GeoSeries.point(nyc_df.dropoff_longitude,nyc_df.dropoff_latitude)
 index_nyc = arctern.within_which(dropoff_points, nyc_arctern_4326)
-is_dorpoff_in_nyc = index_nyc.map(lambda x: x is not pd.NA)
+is_dorpoff_in_nyc = index_nyc.notna()
 dropoff_in_nyc=dropoff_points[is_dorpoff_in_nyc]
 KeplerGl(data={"drop_points": pd.DataFrame(data={'drop_points':dropoff_in_nyc.to_wkt()})})
 ```
