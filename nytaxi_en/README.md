@@ -103,10 +103,11 @@ Load the pick-up locations:
 
 ```python
 import arctern
+from arctern import GeoSeries
 from keplergl import KeplerGl
 
-pickup_points = arctern.ST_Point(nyc_df.pickup_longitude,nyc_df.pickup_latitude)
-KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_AsText(pickup_points)})})
+pickup_points = GeoSeries.point(nyc_df.pickup_longitude,nyc_df.pickup_latitude)
+KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':pickup_points.to_wkt()})})
 ```
 
 <img src="./pic/nyc_taxi_pickup_all.png">
@@ -124,12 +125,14 @@ Load the New York City topographic map from the GeoJSON file with Arctern:
 ```python
 import shapefile
 import json
+# read the topographic data map of New York City
 nyc_shape = shapefile.Reader("/tmp/taxi_zones/taxi_zones.shp")
 nyc_zone=[ shp.shape.__geo_interface__  for shp in nyc_shape.shapeRecords()]
 nyc_zone=[json.dumps(shp) for shp in nyc_zone]
+# read the data with Arctern
 nyc_zone_series=pd.Series(nyc_zone)
-nyc_zone_arctern=arctern.ST_GeomFromGeoJSON(nyc_zone_series)
-arctern.ST_AsText(nyc_zone_arctern)
+nyc_zone_arctern=GeoSeries.geom_from_geojson(nyc_zone_series)
+nyc_zone_arctern.to_wkt()
 ```
 
 Display the loaded map data:
@@ -156,8 +159,9 @@ from sridentify import Sridentify
 ident = Sridentify()
 ident.from_file('/tmp/taxi_zones/taxi_zones.prj')
 src_crs = ident.get_epsg()
-nyc_arctern_4326 = arctern.ST_Transform(nyc_zone_arctern,f'EPSG:{src_crs}','EPSG:4326')
-arctern.ST_AsText(nyc_arctern_4326)
+nyc_zone_arctern.set_crs(f'EPSG:{src_crs}')
+nyc_arctern_4326 = nyc_zone_arctern.to_crs(crs="EPSG:4326")
+nyc_arctern_4326.to_wkt()
 ```
 
 This is the results after coordinate system conversion:
@@ -179,7 +183,7 @@ Length: 263, dtype: object
 With the converted latitude and longitude coordinates, the topographic map of New York City is rendered as follows:
 
 ```python
-KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':arctern.ST_AsText(nyc_arctern_4326)})})
+KeplerGl(data={"nyc_zones": pd.DataFrame(data={'nyc_zones':nyc_arctern_4326.to_wkt()})})
 ```
 <img src="./pic/nyc_shape_all.png">
 
@@ -189,26 +193,26 @@ In order to clean up the noisy data, we can filter out records with pick-up loca
 
 
 ```python
-index_nyc = arctern.sjoin(pickup_points, nyc_arctern_4326, 'within')
-is_in_nyc = index_nyc.map(lambda x: x >= 0)
+index_nyc = arctern.within_which(pickup_points, nyc_arctern_4326)
+is_in_nyc = index_nyc.map(lambda x: x  is not pd.NA )
 pickup_in_nyc = pickup_points[pd.Series(is_in_nyc)]
 ```
 
 Display the pick-up locations after filtering.
 
 ```python
-KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':arctern.ST_AsText(pickup_in_nyc)})})
+KeplerGl(data={"pickup_points": pd.DataFrame(data={'pickup_points':pickup_in_nyc.to_wkt()})})
 ```
 <img src="./pic/nyc_taxi_pickup_filted.png">
 
 Filter these data by the drop-off locations.
 
 ```python
-dropoff_points = arctern.ST_Point(nyc_df.dropoff_longitude,nyc_df.dropoff_latitude)
-index_nyc = arctern.sjoin(dropoff_points, nyc_arctern_4326, 'within')
-is_dorpoff_in_nyc = index_nyc.map(lambda x: x >= 0)
+dropoff_points = GeoSeries.point(nyc_df.dropoff_longitude,nyc_df.dropoff_latitude)
+index_nyc = arctern.within_which(dropoff_points, nyc_arctern_4326)
+is_dorpoff_in_nyc = index_nyc.map(lambda x: x is not pd.NA)
 dropoff_in_nyc=dropoff_points[is_dorpoff_in_nyc]
-KeplerGl(data={"drop_points": pd.DataFrame(data={'drop_points':arctern.ST_AsText(dropoff_in_nyc)})})
+KeplerGl(data={"drop_points": pd.DataFrame(data={'drop_points':dropoff_in_nyc.to_wkt()})})
 ```
 <img src="./pic/nyc_taxi_dropoff_filted.png">
 
@@ -217,8 +221,7 @@ To clean all noisy data, we can filter data with both pick-up locations and the 
 
 
 ```python
-is_resonable = [is_dorpoff_in_nyc[idx] & is_in_nyc[idx] for idx in range(0,len(is_in_nyc)) ]
-in_nyc_df=nyc_df[pd.Series(is_resonable)]
+in_nyc_df=nyc_df[is_in_nyc & is_dorpoff_in_nyc]
 in_nyc_df.fare_amount.describe()
 ```
 
@@ -241,7 +244,7 @@ After filtering the data according to the skeleton map of New York City, we foun
 import json
 with open("/tmp/map_config.json", "r") as f:
     config = json.load(f)
-KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(pickup_in_nyc)})},config=config)
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':pickup_in_nyc.to_wkt()})},config=config)
 ```
 <img src="./pic/nyc_taxi_pickup_filted_small_zone.png">
 
@@ -252,41 +255,49 @@ First load the New York City road network:
 ```python
 import arctern
 nyc_road=pd.read_csv("/tmp/nyc_road.csv", dtype={"roads":"string"}, delimiter='|')
-roads=arctern.ST_GeomFromText(nyc_road.roads)
+roads=GeoSeries(nyc_road.roads)
 ```
 
  Filter data with both pick-up locations and the drop-off locations:
 
 ```python
-pickup_points = arctern.ST_Point(in_nyc_df.pickup_longitude,in_nyc_df.pickup_latitude)
-dropoff_points = arctern.ST_Point(in_nyc_df.dropoff_longitude,in_nyc_df.dropoff_latitude)
+pickup_points = GeoSeries.point(in_nyc_df.pickup_longitude,in_nyc_df.pickup_latitude)
+pickup_points.set_axis(in_nyc_df.index,inplace=True)
+dropoff_points = GeoSeries.point(in_nyc_df.dropoff_longitude,in_nyc_df.dropoff_latitude)
+dropoff_points.set_axis(in_nyc_df.index,inplace=True)
+
 is_pickup_near_road = arctern.near_road(roads, pickup_points)
 is_dropoff_near_road = arctern.near_road(roads, dropoff_points)
-is_resonable = [is_pickup_near_road[idx] & is_dropoff_near_road[idx] for idx in range(0,len(is_dropoff_near_road)) ]
-in_nyc_df=in_nyc_df.reset_index()
-on_road_nyc_df=in_nyc_df[pd.Series(is_resonable)]
+
+is_near_road = is_pickup_near_road & is_dropoff_near_road
+
+on_road_nyc_df = in_nyc_df[is_near_road]
 ```
 
 After filtering out the data far away from the road, we bind the pick-up location to the nearest road to generate a new pick-up location within the road :
 
 ```python
-pickup_points = arctern.ST_Point(on_road_nyc_df.pickup_longitude,on_road_nyc_df.pickup_latitude)
+pickup_points = GeoSeries.point(on_road_nyc_df.pickup_longitude,on_road_nyc_df.pickup_latitude)
+pickup_points.set_axis(on_road_nyc_df.index,inplace=True)
 projectioned_pickup = arctern.nearest_location_on_road(roads, pickup_points)
+projectioned_pickup = GeoSeries(projectioned_pickup)
 ```
 
 Plot the pick-up location within the road:
 
 ```python
-KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(projectioned_pickup)})},config=config)
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':projectioned_pickup.to_wkt()})},config=config)
 ```
 <img src="./pic/nyc_taxi_pickup_on_road.png">
 
 Bind the drop-off location to the nearest road to generate a new drop-off location within the road :
 
 ```python
-dropoff_points = arctern.ST_Point(on_road_nyc_df.dropoff_longitude,on_road_nyc_df.dropoff_latitude)
+dropoff_points = GeoSeries.point(on_road_nyc_df.dropoff_longitude,on_road_nyc_df.dropoff_latitude)
+dropoff_points.set_axis(on_road_nyc_df.index,inplace=True)
 projectioned_dropoff = arctern.nearest_location_on_road(roads, dropoff_points)
-KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':arctern.ST_AsText(projectioned_dropoff)})},config=config)
+projectioned_dropoff = GeoSeries(projectioned_dropoff)
+KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':projectioned_dropoff.to_wkt()})},config=config)
 ```
 <img src="./pic/nyc_taxi_dropoff_on_road.png">
 
@@ -300,9 +311,9 @@ on_road_nyc_df.fare_amount.describe()
 
 The summarized travel cost information for the filtered data:
 
-    count    194812.000000
-    mean          9.692408
-    std           6.976446
+    count    194786.000000
+    mean          9.692384
+    std           6.976573
     min           2.500000
     25%           5.700000
     50%           7.700000
@@ -321,11 +332,9 @@ Plot pick-up and drop-off locations with transaction amount greater than $50:
 
 
 ```python
-fare_amount_gt_50 = in_nyc_df[in_nyc_df.fare_amount > 50]
-pickup_50 = arctern.ST_Point(fare_amount_gt_50.pickup_longitude,fare_amount_gt_50.pickup_latitude)
-dropoff_50 = arctern.ST_Point(fare_amount_gt_50.dropoff_longitude,fare_amount_gt_50.dropoff_latitude)
-KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_50)}),
-               "dropoff":pd.DataFrame(data={'dropoff':arctern.ST_AsText(dropoff_50)})
+fare_amount_gt_50 = on_road_nyc_df[on_road_nyc_df.fare_amount > 50]
+KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':fare_amount_gt_50.pickup_on_road.to_wkt()}),
+               "dropoff":pd.DataFrame(data={'dropoff':fare_amount_gt_50.dropoff_on_road.to_wkt()})
               })
 ```
 
@@ -339,24 +348,22 @@ Calculate the straight-line distance between the pick-up and the drop-off locati
 
 
 ```python
-nyc_distance=arctern.ST_DistanceSphere(arctern.ST_Point(in_nyc_df.pickup_longitude,
-                                                        in_nyc_df.pickup_latitude),
-                                       arctern.ST_Point(in_nyc_df.dropoff_longitude,
-                                                        in_nyc_df.dropoff_latitude))
-nyc_distance.index=in_nyc_df.index
+on_road_nyc_df.pickup_on_road.set_crs("EPSG:4326")
+on_road_nyc_df.dropoff_on_road.set_crs("EPSG:4326")
+nyc_distance=on_road_nyc_df.pickup_on_road.distance_sphere(on_road_nyc_df.dropoff_on_road)
 nyc_distance.describe()
 ```
 The straight-line distance summary for all the trips:
 
 
 ```
-count    194155.000000
-mean       3114.627009
-std        3233.474564
+count    194786.000000
+mean       3113.344497
+std        3232.008220
 min           0.000000
-25%        1224.656797
-50%        2088.272336
-75%        3733.545547
+25%        1224.650347
+50%        2087.753029
+75%        3730.790193
 max       35418.698339
 dtype: float64
 ```
@@ -364,19 +371,14 @@ dtype: float64
 Get the pick-up and the drop-off locations for trips with a straight-line distance greater than 20 kilometers, and plot them.
 
 ```python
-nyc_with_distance=pd.DataFrame({"pickup_longitude":in_nyc_df.pickup_longitude,
-                                "pickup_latitude":in_nyc_df.pickup_latitude,
-                                "dropoff_longitude":in_nyc_df.dropoff_longitude,
-                                "dropoff_latitude":in_nyc_df.dropoff_latitude,
+nyc_with_distance=pd.DataFrame({"pickup":on_road_nyc_df.pickup_on_road,
+                                "dropoff":on_road_nyc_df.dropoff_on_road,
                                 "sphere_distance":nyc_distance
                                })
 
 nyc_dist_gt = nyc_with_distance[nyc_with_distance.sphere_distance > 20e3]
-pickup_gt = arctern.ST_Point(nyc_dist_gt.pickup_longitude,nyc_dist_gt.pickup_latitude)
-dropoff_gt = arctern.ST_Point(nyc_dist_gt.dropoff_longitude,nyc_dist_gt.dropoff_latitude)
-
-KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':arctern.ST_AsText(pickup_gt)}),
-               "dropoff":pd.DataFrame(data={'dropoff':arctern.ST_AsText(dropoff_gt)})
+KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':nyc_dist_gt.pickup.to_wkt()}),
+               "dropoff":pd.DataFrame(data={'dropoff':nyc_dist_gt.dropoff.to_wkt()})
               })
 ```
 
