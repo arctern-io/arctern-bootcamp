@@ -4,7 +4,7 @@
 
 ## 环境准备
 
-- #### [安装 Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/installation.html#id1)
+- #### [安装 Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/standalone_installation.html)
 
 - #### 安装 Jupyter
 
