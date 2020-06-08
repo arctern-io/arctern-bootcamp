@@ -4,7 +4,7 @@ This tutorial will guide you through analyzing New York City Taxi dataset with A
 
 ## Prerequisite
 
-- #### [Install Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/standalone_installation.html)
+- #### [Install Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-en/html/quick_start/standalone_installation.html)
 
 - #### Install Jupyter Notebook
 
