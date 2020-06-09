@@ -374,4 +374,4 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':nyc_dist_gt.pickup.to_wkt()
 
 <img src="./pic/nyc_taxi_distance_gt_20km.png">
 
-同样我们发现直线距离大于 20 公里的，也都是从市中心触发去周边比较远的地方。综上我们完成了对出租车数据关于交易额和里程距离的分析，更多分析功能可以参考 **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/api/pandas_api/pandas_api.html)**。
+同样我们发现直线距离大于 20 公里的，也都是从市中心触发去周边比较远的地方。综上我们完成了对出租车数据关于交易额和里程距离的分析，更多分析功能可以参考 **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/index.html)**。
