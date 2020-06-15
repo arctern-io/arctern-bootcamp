@@ -43,7 +43,7 @@ $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/shtruck/file/sh
 Download  [arctern_shtruck_bootcamp.ipynb](https://github.com/arctern-io/arctern-bootcamp/blob/master/nytaxi/arctern_shtruck_bootcamp_en.ipynb) , start jupyter notebook with `arctern_env` environment：
 
 ```bash
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtruck/arctern_shtruck_bootcamp.ipynb
+$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtruck_en/arctern_shtruck_bootcamp.ipynb
 # 运行 jupyter notebook
 $ jupyter notebook
 ```

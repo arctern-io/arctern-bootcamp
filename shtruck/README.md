@@ -32,6 +32,7 @@
 $ cd /tmp
 # 下载并解压上海渣土车数据
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtruck/file/20181016.zip
+$ unzip 20181016.zip
 # 下载上海市的地形数据图
 $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/shtruck/file/sh_roads.csv
 ```
@@ -42,7 +43,7 @@ $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/shtruck/file/sh
 
 下载 [arctern_shtruck_bootcamp.ipynb](https://github.com/arctern-io/arctern-bootcamp/blob/master/nytaxi/arctern_shtruck_bootcamp.ipynb) 文件，在 `arctern_env` 环境中运行 jupyter notebook：
 
-```
+```bash
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtruck/arctern_shtruck_bootcamp.ipynb
 # 运行 jupyter notebook
 $ jupyter notebook
@@ -423,7 +424,7 @@ one_on_roads
 
 ![](pic/one_trace_on_road_zoom_up.png)
 
-## 
+
 
 ### 4. 道路分析
 
