@@ -31,7 +31,7 @@
 ```bash
 $ cd /tmp
 # 下载并解压上海渣土车数据
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtruck/file/20181016.zip
+$ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/shtruck/file/20181816.zip
 $ unzip 20181016.zip
 # 下载上海市的地形数据图
 $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/shtruck/file/sh_roads.csv
