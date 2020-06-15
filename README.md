@@ -12,5 +12,8 @@ Arctern is designed specifically to accelerate the processing, analysis, and vis
 This bootcamp includes the following content:
 
 - [Analyzing New York City Taxi Dataset](./nytaxi_en)
+- [Analyzing Shanghai Truck Dataset](./shtruck_en)
+
+To connect with other users and contributors, welcome to join our [Slack channel](https://join.slack.com/t/arctern-io/shared_invite/zt-e0yxka0h-RIo1spnKyLQhdwfWwygjYA).
 
 To connect with other users and contributors, welcome to join our [Slack channel](https://join.slack.com/t/arctern-io/shared_invite/zt-e0yxka0h-RIo1spnKyLQhdwfWwygjYA).

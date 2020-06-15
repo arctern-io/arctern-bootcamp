@@ -13,5 +13,6 @@ Arctern 的目标是加速时空数据的处理、分析、模型预测与呈现
 本在线训练营包含以下内容：
 
 - [纽约出租车数据分析](./nytaxi)
+- [上海渣土车分析](./shtruck)
 
 欢迎加入： [Slack channel](https://join.slack.com/t/arctern-io/shared_invite/zt-e0yxka0h-RIo1spnKyLQhdwfWwygjYA) 与其他用户和贡献者联系。
