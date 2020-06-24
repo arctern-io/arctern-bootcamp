@@ -53,7 +53,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 $ jupyter notebook
 ```
 
-在 Jupyter Notebook 网页中打开 arctern_nytaxi_bootcamp.ipynb 文件，就可以开始运行代码了。
+在 Jupyter Notebook 网页中打开 **arctern_nytaxi_bootcamp.ipynb** 文件，就可以开始运行代码了。
 
 
 
@@ -292,7 +292,7 @@ KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':pro
 ```
 <img src="./pic/nyc_taxi_dropoff_on_road.png">
 
-将绑路后的乘客上下车位置信息添加到 on_road_nyc_df 中：
+将绑路后的乘客上下车位置信息添加到 `on_road_nyc_df` 中：
 ```python
 on_road_nyc_df.insert(16,'pickup_on_road',projectioned_pickup)
 on_road_nyc_df.insert(17,'dropoff_on_road',projectioned_dropoff)
@@ -314,7 +314,7 @@ on_road_nyc_df.fare_amount.describe()
 
 ### 2. 数据分析
 
-数据过滤这一步十分重要，它可以保证我后期的数据分析结果有效。接下来我们将根据交易额和直线距离分析出租车的运营情况。
+数据过滤这一步十分重要，它可以保证后期的数据分析结果有效。接下来我们将根据交易额和直线距离分析出租车的运营情况。
 
 #### 2.1 关于交易额
 
@@ -374,4 +374,4 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':nyc_dist_gt.pickup.to_wkt()
 
 <img src="./pic/nyc_taxi_distance_gt_20km.png">
 
-同样我们发现直线距离大于 20 公里的，也都是从市中心触发去周边比较远的地方。综上我们完成了对出租车数据关于交易额和里程距离的分析，更多分析功能可以参考 **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/index.html)**。
+同样我们发现直线距离大于 20 公里的，也都是从市中心触发去周边比较远的地方。综上我们完成了对出租车数据关于交易额和里程距离的分析，更多分析功能可以参考 **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/api_reference/api_reference.html)**。

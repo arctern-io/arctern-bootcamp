@@ -53,7 +53,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 $ jupyter notebook
 ```
 
-Open arctern_nytaxi_bootcamp.ipynb in Jupyter Notebook, start to have fun with the example codes.
+Open **arctern_nytaxi_bootcamp.ipynb** in Jupyter Notebook, start to have fun with the example codes.
 
 
 
@@ -301,7 +301,7 @@ KeplerGl(data={"projectioned_point": pd.DataFrame(data={'projectioned_point':pro
 ```
 <img src="./pic/nyc_taxi_dropoff_on_road.png">
 
-After bind the pick-up location and drop-off loaction to the road, add the information to  on_road_nyc_df:
+After bind the pick-up location and drop-off loaction to the road, add the information to  `on_road_nyc_df`:
 
 ```python
 on_road_nyc_df.insert(16,'pickup_on_road',projectioned_pickup)
@@ -386,4 +386,4 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':nyc_dist_gt.pickup.to_wkt()
 
 We can see that trips with straight-line distances greater than 20 kilometers are also from the city center to far away places. 
 
-Now you have completed the analysis of New York City Taxi dataset on transaction amount and straight-line distance, for more functions please refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-en/html/index.html)**。
+Now you have completed the analysis of New York City Taxi dataset on transaction amount and straight-line distance, for more functions please refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-en/html/api_reference/api_reference.html)**。
