@@ -31,14 +31,14 @@
 ```bash
 $ cd /tmp
 # 下载纽约出租车数据
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/0_2M_nyc_taxi_and_building.csv
+$ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/nytaxi/file/0_2M_nyc_taxi_and_building.csv
 # 下载并解压纽约市的地形数据图
-$ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/taxi_zones.zip
+$ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/nytaxi/file/taxi_zones.zip
 $ unzip -d taxi_zones taxi_zones.zip
 # 下载纽约市的道路网数据
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/nyc_road.csv
+$ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/nytaxi/file/nyc_road.csv
 # 下载 kepler.gl 配置文件
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/map_config.json
+$ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/nytaxi/file/map_config.json
 ```
 
 
@@ -48,7 +48,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 文件，在 `arctern_env` 环境中运行 Jupyter Notebook：
 
 ```bash
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/arctern_nytaxi_bootcamp.ipynb
+$ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/nytaxi/arctern_nytaxi_bootcamp.ipynb
 # 运行 Jupyter Notebook
 $ jupyter notebook
 ```

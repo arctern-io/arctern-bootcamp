@@ -31,14 +31,14 @@ Download the data prepared for this tutorial including 200,000 New York City tax
 ```bash
 $ cd /tmp
 # Download New York City Taxi data
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/0_2M_nyc_taxi_and_building.csv
+$ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/nytaxi/file/0_2M_nyc_taxi_and_building.csv
 # Download and unzip the topographic map of New York
-$ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/taxi_zones.zip
+$ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/nytaxi/file/taxi_zones.zip
 $ unzip -d taxi_zones taxi_zones.zip
 # Download New York City road network data
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/nyc_road.csv
+$ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/nytaxi/file/nyc_road.csv
 # Download kepler.gl config file
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/map_config.json
+$ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/nytaxi/file/map_config.json
 ```
 
 
@@ -48,7 +48,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 Download [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) ，start Jupyter Notebook with `arctern_env` environment：
 
 ```bash
-$ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi_en/arctern_nytaxi_bootcamp.ipynb
+$ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/nytaxi_en/arctern_nytaxi_bootcamp.ipynb
 # starting jupyter notebook
 $ jupyter notebook
 ```
