@@ -48,7 +48,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtr
 $ jupyter notebook
 ```
 
-Open arctern_nytaxi_bootcamp.ipynb in Jupyter Notebook, start to have fun with the example codes.
+Open **arctern_nytaxi_bootcamp.ipynb** in Jupyter Notebook, start to have fun with the example codes.
 
 
 

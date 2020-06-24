@@ -49,7 +49,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtr
 $ jupyter notebook
 ```
 
-在 Jupyter Notebook 网页中打开 arctern_shtruck_bootcamp.ipynb 文件，就可以开始运行代码了。
+在 Jupyter Notebook 网页中打开 **arctern_shtruck_bootcamp.ipynb** 文件，就可以开始运行代码了。
 
 
 
