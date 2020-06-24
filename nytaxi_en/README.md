@@ -1,6 +1,6 @@
 # Analyzing New York City Taxi Dataset with Arctern
 
-This tutorial will guide you through analyzing New York City Taxi dataset with Arctern for massive  Geospatial data processing and with keplergl for data visualization. 
+This tutorial will guide you through analyzing New York City Taxi dataset with Arctern for massive  Geospatial data processing and with kepler.gl for data visualization. 
 
 ## Prerequisite
 
@@ -37,7 +37,7 @@ $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/tax
 $ unzip -d taxi_zones taxi_zones.zip
 # Download New York City road network data
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/nyc_road.csv
-# Download kepler config file
+# Download kepler.gl config file
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/map_config.json
 ```
 
@@ -45,7 +45,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 
 ## Initialize Jupyter Notebook
 
-Download [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) ，start jupyter notebook with `arctern_env` environment：
+Download [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) ，start Jupyter Notebook with `arctern_env` environment：
 
 ```bash
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi_en/arctern_nytaxi_bootcamp.ipynb
@@ -53,7 +53,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nyta
 $ jupyter notebook
 ```
 
-Open arctern_nytaxi_bootcamp.ipynb in jupyter notebook, start to have fun with the example codes.
+Open arctern_nytaxi_bootcamp.ipynb in Jupyter Notebook, start to have fun with the example codes.
 
 
 
@@ -97,7 +97,7 @@ nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
 
 #### 1.2 Data display
 
-The data set includes longitude and latitude of pick-up and drop-off locations for each taxi trip. We can visualize all these locations on the map with Arctern and keplergl to get better understanding of the data. 
+The data set includes longitude and latitude of pick-up and drop-off locations for each taxi trip. We can visualize all these locations on the map with Arctern and kepler.gl to get better understanding of the data. 
 
 Load the pick-up locations:
 

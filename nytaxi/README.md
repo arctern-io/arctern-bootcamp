@@ -1,12 +1,12 @@
 # Arctern 助力分析纽约出租车数据
 
-本文将介绍如何利用 Arctern 处理大型地理空间数据，并使用 keplergl 进行数据可视化分析纽约市出租车数据集。
+本文将介绍如何利用 Arctern 处理大型地理空间数据，并使用 kepler.gl 进行数据可视化分析纽约市出租车数据集。
 
 ## 环境准备
 
 - #### [安装 Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/standalone_installation.html)
 
-- #### 安装 Jupyter
+- #### 安装 Jupyter Notebook
 
   在上一步中的 `arctern_env` 环境中执行以下命令安装 Jupyter Notebook：
 
@@ -37,23 +37,23 @@ $ wget https://github.com/zilliztech/arctern-bootcamp/raw/master/nytaxi/file/tax
 $ unzip -d taxi_zones taxi_zones.zip
 # 下载纽约市的道路网数据
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/nyc_road.csv
-# 下载 kepler 配置文件
+# 下载 kepler.gl 配置文件
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/file/map_config.json
 ```
 
 
 
-## 运行 jupyter-notebook
+## 运行 Jupyter Notebook
 
-下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 文件，在 `arctern_env` 环境中运行 jupyter notebook：
+下载 [arctern_nytaxi_bootcamp.ipynb](./arctern_nytaxi_bootcamp.ipynb) 文件，在 `arctern_env` 环境中运行 Jupyter Notebook：
 
 ```bash
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/nytaxi/arctern_nytaxi_bootcamp.ipynb
-# 运行 jupyter notebook
+# 运行 Jupyter Notebook
 $ jupyter notebook
 ```
 
-在 jupyter 网页中打开 arctern_nytaxi_bootcamp.ipynb 文件，就可以开始运行代码了。
+在 Jupyter Notebook 网页中打开 arctern_nytaxi_bootcamp.ipynb 文件，就可以开始运行代码了。
 
 
 
@@ -97,7 +97,7 @@ nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
 
 #### 1.2 数据展示
 
-我们本次处理的 gis 数据主要包括出租车辆的上车点和下车点的经纬度， 接下来将 Arctern 结合 keplergl 展示在地图上所有 gis 点位置，根据可视化结果可以看出数据集的一些情况。首先加载车辆的上车点数据：
+我们本次处理的 GIS（地理信息系统，geographic information system） 数据主要包括出租车辆的上车点和下车点的经纬度， 接下来将 Arctern 结合 kepler.gl 展示在地图上所有 GIS 点位置，根据可视化结果可以看出数据集的一些情况。首先加载车辆的上车点数据：
 
 ```python
 import arctern
