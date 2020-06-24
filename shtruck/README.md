@@ -1,12 +1,12 @@
 # Arctern 助力分析上海渣土车数据
 
-本文将介绍如何利用 Arctern 处理大型地理空间数据，并使用 keplergl 进行数据可视化分析上海渣土车数据集。
+本文将介绍如何利用 Arctern 处理大型地理空间数据，并使用 kepler.gl 进行数据可视化分析上海渣土车数据集。
 
 ## 环境准备
 
 - #### [安装 Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-cn/html/quick_start/standalone_installation.html)
 
-- #### 安装 Jupyter
+- #### 安装 Jupyter Notebook
 
   在上一步中的 `arctern_env` 环境中执行以下命令安装 Jupyter Notebook：
 
@@ -39,9 +39,9 @@ $ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/shtruck/file/sh
 
 
 
-## 运行 jupyter-notebook
+## 运行 Jupyter Notebook
 
-下载 [arctern_shtruck_bootcamp.ipynb](https://github.com/arctern-io/arctern-bootcamp/blob/master/nytaxi/arctern_shtruck_bootcamp.ipynb) 文件，在 `arctern_env` 环境中运行 jupyter notebook：
+下载 [arctern_shtruck_bootcamp.ipynb](https://github.com/arctern-io/arctern-bootcamp/blob/master/nytaxi/arctern_shtruck_bootcamp.ipynb) 文件，在 `arctern_env` 环境中运行 Jupyter Notebook：
 
 ```bash
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtruck/arctern_shtruck_bootcamp.ipynb
@@ -49,7 +49,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtr
 $ jupyter notebook
 ```
 
-在 jupyter 网页中打开 arctern_shtruck_bootcamp.ipynb 文件，就可以开始运行代码了。
+在 Jupyter Notebook 网页中打开 arctern_shtruck_bootcamp.ipynb 文件，就可以开始运行代码了。
 
 
 
@@ -462,13 +462,13 @@ KeplerGl(data={"all_roads": pd.DataFrame(data={'all_roads':GeoSeries(road_unique
 
 ![](pic/traffic_road.png)
 
-可以看出，对于一些主干道路，每辆渣土车都可能会经过，导致这条道路上的 `GPS` 信号采样点比较多，同时因为是主干道路，经过车辆比较多，导致渣土车速度缓慢，进一步加强该道路上的 `GPS` 采样点数据。
+可以看出，对于一些主干道路，每辆渣土车都可能会经过，导致这条道路上的 GPS 信号采样点比较多，同时因为是主干道路，经过车辆比较多，导致渣土车速度缓慢，进一步加强该道路上的 GPS 采样点数据。
 
 接下来我们将根据道路上渣土车的采样点数目，来寻找较繁忙的道路。
 
 - #### 渣土车道路权重分析
 
-统计每条道路上的 `GPS` 采样点数目，并重新构建 `DataFrame` ，我们把道路上 `GPS` 采样点的数据记为道路权重：
+统计每条道路上的 GPS 采样点数目，并重新构建 `DataFrame` ，我们把道路上 GPS 采样点的数据记为道路权重：
 
 
 ```python

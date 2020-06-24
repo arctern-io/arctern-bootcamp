@@ -1,6 +1,6 @@
 # Analyzing Shanghai Truck Dataset with Arctern
 
-This tutorial will guide you through analyzing Shanghai Truck dataset with Arctern for massive Geospatial data processing and with keplergl for data visualization.
+This tutorial will guide you through analyzing Shanghai Truck dataset with Arctern for massive Geospatial data processing and with kepler.gl for data visualization.
 
 ## Prerequisite
 
@@ -40,7 +40,7 @@ $ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/shtruck/file/sh
 
 ## Initialize Jupyter Notebook
 
-Download  [arctern_shtruck_bootcamp.ipynb](https://github.com/arctern-io/arctern-bootcamp/blob/master/nytaxi/arctern_shtruck_bootcamp_en.ipynb) , start jupyter notebook with `arctern_env` environment：
+Download  [arctern_shtruck_bootcamp.ipynb](https://github.com/arctern-io/arctern-bootcamp/blob/master/nytaxi/arctern_shtruck_bootcamp_en.ipynb) , start Jupyter Notebook with `arctern_env` environment：
 
 ```bash
 $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtruck_en/arctern_shtruck_bootcamp.ipynb
@@ -48,7 +48,7 @@ $ wget https://raw.githubusercontent.com/zilliztech/arctern-bootcamp/master/shtr
 $ jupyter notebook
 ```
 
-Open arctern_nytaxi_bootcamp.ipynb in jupyter notebook, start to have fun with the example codes.
+Open arctern_nytaxi_bootcamp.ipynb in Jupyter Notebook, start to have fun with the example codes.
 
 
 
@@ -454,7 +454,7 @@ KeplerGl(data={"all_roads": pd.DataFrame(data={'all_roads':GeoSeries(road_unique
 
 ![](pic/traffic_road.png)
 
-It can be seen that for some main roads, each truck will pass, resulting in more truch location on the road, and because this is a main road, the speed of the truck is slow, which further enhances the `GPS` data on the road.
+It can be seen that for some main roads, each truck will pass, resulting in more truch location on the road, and because this is a main road, the speed of the truck is slow, which further enhances the GPS data on the road.
 
 Next, we will find for the busier road according to the number of truck location on the road.
 
