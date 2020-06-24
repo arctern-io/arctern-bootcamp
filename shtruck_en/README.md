@@ -26,7 +26,7 @@ This tutorial will guide you through analyzing Shanghai Truck dataset with Arcte
 
 ## Data Preparation
 
-Download the data prepared for this tutorial including: more than 2 million Shanghai Truck data records and Shanghai topographic map. Save the data in  `/tmp` by  default:
+Download the data prepared for this tutorial including more than 2 million Shanghai Truck data records and Shanghai topographic maps. Save the data in  `/tmp` by  default:
 
 ```bash
 $ cd /tmp
@@ -52,7 +52,7 @@ Open **arctern_nytaxi_bootcamp.ipynb** in Jupyter Notebook, start to have fun wi
 
 
 
-## Introduce of the example codes
+## Introduce the example codes
 
 ### 1. Data loading
 
@@ -277,7 +277,7 @@ one_truck_roads
 ```
 ![](pic/one_trace_with_road.png)
 
-With the visualized results on the map, by zooming it can be found in the track location of  that struck is not on the road, and these noisy data need to be cleared.
+With the visualized results on the map, by zooming it can be found in the track location is not on the road, and these noisy data need to be cleared.
 
 
 ![](pic/one_trace_with_road_zoom_up.png)
@@ -415,7 +415,7 @@ one_on_roads
 ```
 ![](pic/one_trace_on_road.png)
 
-By zooming, we can see that all the location are on the road:
+By zooming, we can see that all the location is on the road:
 
 ![](pic/one_trace_on_road_zoom_up.png)
 
@@ -454,9 +454,9 @@ KeplerGl(data={"all_roads": pd.DataFrame(data={'all_roads':GeoSeries(road_unique
 
 ![](pic/traffic_road.png)
 
-It can be seen that for some main roads, each truck will pass, resulting in more truch location on the road, and because this is a main road, the speed of the truck is slow, which further enhances the GPS data on the road.
+It can be seen that for some main roads, each truck will pass, resulting in more truck locations on the road, and because this is the main road, the speed of the truck is slow, which further enhances the GPS data on the road.
 
-Next, we will find for the busier road according to the number of truck location on the road.
+Next, we will find the busier road according to the number of truck locations on the road.
 
 - #### Road weight analysis of truck
 

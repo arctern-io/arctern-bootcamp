@@ -26,7 +26,7 @@ This tutorial will guide you through analyzing New York City Taxi dataset with A
 
 ## Data Preparation
 
-Download the data prepared for this tutorial including: 200,000 New York City taxi data records and New York City topographic map. Save the data in `/tmp` by default:
+Download the data prepared for this tutorial including 200,000 New York City taxi data records and New York City topographic map. Save the data in `/tmp` by default:
 
 ```bash
 $ cd /tmp
@@ -57,13 +57,13 @@ Open **arctern_nytaxi_bootcamp.ipynb** in Jupyter Notebook, start to have fun wi
 
 
 
-## Introduce of the example codes
+## Introduce the example codes
 
-This example includes codes for data cleansing and data analyzing.
+This example includes codes for data cleansing and data analysis.
 
 ### 1. Data cleansing
 
-The data used in this tutorial is 200,000 records extracted from New York City taxi dataset, however, noisy data is inevitable when dealing data with such scale. Noisy data can usually affect the results directly, so identifying and cleansing the noisy data efficiently is quite critical in data analyzing procedure.
+The data used in this tutorial is 200,000 records extracted from New York City taxi dataset, however, noisy data is inevitable when dealing with data such scale. Noisy data can usually affect the results directly, so identifying and cleansing the noisy data efficiently is quite critical in data analyzing procedure.
 
 #### 1.1 Data loading
 
@@ -97,7 +97,7 @@ nyc_df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
 
 #### 1.2 Data display
 
-The data set includes longitude and latitude of pick-up and drop-off locations for each taxi trip. We can visualize all these locations on the map with Arctern and kepler.gl to get better understanding of the data. 
+The data set includes longitude and latitude of pick-up and drop-off locations for each taxi trip. We can visualize all these locations on the map with Arctern and kepler.gl to get a better understanding of the data. 
 
 Load the pick-up locations:
 
@@ -116,7 +116,7 @@ With the visualized results on the map, we can identify the noisy data easily, a
 
 #### 1.3 Data filter
 
-In order to get rid of the noisy data, we can filter the data according to the topographic map of New York City. The idea is that, if the pick-up or drop-off location is not within the New York City boundary, this record should be filtered. To do this, we also need to converted the New York City topographic map stored in the GeoJSON data format to "EPSG: 4326" geodetic coordinate system.
+To get rid of the noisy data, we can filter the data according to the topographic map of New York City. The idea is that, if the pick-up or drop-off location is not within the New York City boundary, this record should be filtered. To do this, we also need to convert the New York City topographic map stored in the GeoJSON data format to "EPSG: 4326" geodetic coordinate system.
 
 ##### 1.3.1 Data conversion
 
@@ -340,7 +340,7 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':fare_amount_gt_50.pickup_on
 
 <img src="./pic/nyc_taxi_fare_gt_50.png">
 
-You can interactive with the map by expand the small triangle in the upper left corner, such as hiding the pick-up or drop-off locations. We can see that most trips with transaction amount greater than $50 are from the city center to far away places.
+You can interact with the map by expanding the small triangle in the upper left corner, such as hiding the pick-up or drop-off locations. We can see that most trips with transaction amount greater than $50 are from the city center to faraway places.
 
 #### 2.2 About distance
 
@@ -384,6 +384,6 @@ KeplerGl(data={"pickup": pd.DataFrame(data={'pickup':nyc_dist_gt.pickup.to_wkt()
 
 <img src="./pic/nyc_taxi_distance_gt_20km.png">
 
-We can see that trips with straight-line distances greater than 20 kilometers are also from the city center to far away places. 
+We can see that trips with straight-line distances greater than 20 kilometers are also from the city center to faraway places. 
 
-Now you have completed the analysis of New York City Taxi dataset on transaction amount and straight-line distance, for more functions please refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-en/html/api_reference/api_reference.html)**。
+Now you have completed the analysis of New York City Taxi dataset on the transaction amount and straight-line distance, for more functions please refer to **[Arctern API](https://arctern.io/docs/versions/v0.2.x/development-doc-en/html/api_reference/api_reference.html)**。
