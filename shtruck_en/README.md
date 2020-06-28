@@ -1,32 +1,30 @@
 # Analyzing Shanghai Truck Dataset with Arctern
 
-This tutorial will guide you through analyzing Shanghai Truck dataset with Arctern for massive Geospatial data processing and with kepler.gl for data visualization.
+This tutorial uses the Shanghai Truck dataset as an example to describe how to use Arctern to process large geospatial data and use kepler.gl to visualize data.
 
 ## Prerequisite
 
-- #### [Install Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-en/html/quick_start/standalone_installation.html)
+#### [Install Arctern](https://arctern.io/docs/versions/v0.2.x/development-doc-en/html/quick_start/standalone_installation.html)
 
-- #### Install Jupyter Notebook
+#### Install Jupyter Notebook
 
-  Run the following command in the `artern_env` environment of the previous step to install Jupyter Notebook:
+In the previous step, you have set up the `artern_env` environment. Enter this environment and run the following command to install Jupyter Notebook:
 
-  ```bash
-  $ conda install -c conda-forge notebook
-  ```
+```bash
+$ conda install -c conda-forge notebook
+```
 
-- #### Install required libraries
+#### Install required libraries
 
-  Run the following command in the `arctern_env` environment to install required libraries:
+In the `arctern_env` environment, run the following command to install required libraries:
 
-  ```bash
-  $ pip install keplergl matplotlib
-  ```
-
-
+```bash
+$ pip install keplergl matplotlib
+```
 
 ## Data Preparation
 
-Download the data prepared for this tutorial including more than 2 million Shanghai Truck data records and Shanghai topographic maps. Save the data in  `/tmp` by  default:
+Download the Shanghai Truck dataset, which includes more than 2 million Shanghai Truck data records and the Shanghai topographic map. Save the data in `/tmp` by default:
 
 ```bash
 $ cd /tmp
@@ -36,27 +34,23 @@ $ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/shtruck/file/20
 $ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/shtruck/file/sh_roads.csv
 ```
 
-
-
 ## Initialize Jupyter Notebook
 
-Download  [arctern_shtruck_bootcamp.ipynb](https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/shtruck_en/arctern_shtruck_bootcamp.ipynb) , start Jupyter Notebook with `arctern_env` environment：
+Download [arctern_shtruck_bootcamp.ipynb](https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/shtruck_en/arctern_shtruck_bootcamp.ipynb), and then start Jupyter Notebook in the `arctern_env` environment：
 
 ```bash
 $ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/shtruck_en/arctern_shtruck_bootcamp.ipynb
-# starting jupyter notebook
+# Start Jupyter Notebook
 $ jupyter notebook
 ```
 
-Open **arctern_nytaxi_bootcamp.ipynb** in Jupyter Notebook, start to have fun with the example codes.
+Open **arctern_nytaxi_bootcamp.ipynb** in Jupyter Notebook. Let's start to have fun with the example codes.
 
-
-
-## Introduce the example codes
+## Introduction of example codes
 
 ### 1. Data loading
 
-Load Shanghai truck trajectory data, the original data has a total of 8 columns, here only read the 4 columns required for analysis: plate number, time, latitude and longitude.
+Load Shanghai truck trajectory data. The original data has a total of 8 columns, but here we only need 4 columns for analysis: plate number, time, latitude and longitude.
 
 
 ```python
@@ -101,8 +95,7 @@ sh_df = pd.read_csv("/tmp/20181016.txt",
                     parse_dates=["pos_time"])
 ```
 
-According to the latitude and longitude, construct position information:
-
+According to the latitudes and longitudes, construct position information:
 
 ```python
 sh_df["pos_point"]=GeoSeries.point(sh_df.pos_longitude,sh_df.pos_latitude)
@@ -220,7 +213,6 @@ sh_df
 
 We can restore the running track of a truck. First, we select a plate numbers of truck and filter all the data:
 
-
 ```python
 one_trunck_plate_number=sh_df.plate_number[0]
 print(one_trunck_plate_number)
@@ -240,8 +232,7 @@ KeplerGl(data={"car_pos": pd.DataFrame(data={'car_pos':one_truck_df.pos_point.to
 
 ### 3. Display road network and track
 
-Next, we will look at the running track of the above truck according to the road network information of Shanghai, and first load the road network information:
-
+Next, we will look at the running track of the above truck according to the road network information of Shanghai. First, load the road network information:
 
 ```python
 sh_roads=pd.read_csv("/tmp/sh_roads.csv", 
@@ -278,14 +269,14 @@ one_truck_roads
 ```
 ![](pic/one_trace_with_road.png)
 
-With the visualized results on the map, by zooming it can be found in the track location is not on the road, and these noisy data need to be cleared.
+The returned map results support interaction. By zooming it in, you can find that some trajectory points of the vehicle are not on the road, and these noise data need to be cleaned.
 
 
 ![](pic/one_trace_with_road_zoom_up.png)
 
-- #### Data conversion
+#### Data conversion
 
-We think that the track location that are not on the road are noisy information, and these track points must be bound to the closest road:
+We regard the track locations that are not on the road as noisy data, and these track points must be bound to the closest roads:
 
 
 ```python
@@ -312,7 +303,7 @@ on_road
 
 - #### Binding algorithm
 
-Bind the truck location to the road, and reconstruct the  `DataFrame`：
+Bind the truck locations to the roads, and reconstruct the  `DataFrame`：
 
 
 ```python
@@ -416,18 +407,17 @@ one_on_roads
 ```
 ![](pic/one_trace_on_road.png)
 
-By zooming, we can see that all the location is on the road:
+By zooming out, we can see that all the locations are on the road:
 
 ![](pic/one_trace_on_road_zoom_up.png)
 
 ### 4. Road analysis
 
-We learned that there are 74,693 road network information records in Shanghai, but it is impossible for trucks to cross all roads. We will analyze the roads where trucks travel to see the roads with the highest frequency.
+There are 74,693 road network records in Shanghai, but trucks will not cross all roads. So, we will analyze the roads that the truck passes by to see which roads have the highest passing-by frequency.
 
-- #### Draw the road where trucks travel
+#### Draw the road where trucks travel
 
-First filter out all the roads that the truck passes:
-
+First, filter out all the roads that the truck passes:
 
 ```python
 all_roads=arctern.nearest_road(sh_roads,sh_on_road_df.on_road)
@@ -435,8 +425,7 @@ all_roads=GeoSeries(all_roads)
 road_codes, road_uniques = pd.factorize(all_roads)
 ```
 
-Show the road data of all passing trucks and the percentage:
-
+Show the road data of all passing trucks and the corresponding percentage:
 
 ```python
 print(len(road_uniques))
@@ -455,13 +444,13 @@ KeplerGl(data={"all_roads": pd.DataFrame(data={'all_roads':GeoSeries(road_unique
 
 ![](pic/traffic_road.png)
 
-It can be seen that for some main roads, each truck will pass, resulting in more truck locations on the road, and because this is the main road, the speed of the truck is slow, which further enhances the GPS data on the road.
+For some main roads, there are many trucks pass by, which results in plenty of GPS signal sampling points on these roads. At the same time, due to the high traffic volume of these roads, many trucks drive very slowly, which further strengthenes the GPS sampling points on the roads.
 
-Next, we will find the busier road according to the number of truck locations on the road.
+Next, we will find the busy roads according to the number of truck locations on the roads.
 
-- #### Road weight analysis of truck
+#### Road weight analysis of truck
 
-Count the number of truck location on each road, and reconstruct `DataFrame`, we record the num of location point on the road as road weights:
+Count the number of truck locations on each road, and reconstruct `DataFrame`. We take the number of location points on the road as road weights:
 
 
 ```python
@@ -546,8 +535,8 @@ sh_road_weight
 </table>
 <p>16450 rows × 2 columns</p>
 </div>
-Show the road weights:
 
+Show the road weights:
 
 ```python
 sh_road_weight.weight_value.describe()
@@ -564,10 +553,9 @@ sh_road_weight.weight_value.describe()
     max      28144.000000
     Name: weight_value, dtype: float64
 
-It can be found that most roads are not busy, but there are also some particularly busy roads.
+It can be found that most roads are not busy, yet some roads are very busy.
 
 Plot `weight_value` into a histogram:
-
 
 ```python
 import matplotlib.pyplot as plt
@@ -575,19 +563,16 @@ plt.bar(sh_road_weight.index,sh_road_weight.weight_value)
 plt.show()
 ```
 
-
 ![](pic/road_bar_map.png)
 
 The histogram can further confirm the previous conclusion.
 
-Sort all roads according to road weights:
-
+Sort all roads according to the road weights:
 
 ```python
 sh_sorted_road=sh_road_weight.sort_values(by=['weight_value'],ascending=False)
 sh_sorted_road
 ```
-
 
 <div>
 <table border="1" class="dataframe">
@@ -658,6 +643,7 @@ sh_sorted_road
 </table>
 <p>16450 rows × 2 columns</p>
 </div>
+
 Select the top 100 busiest roads:
 
 
@@ -736,8 +722,7 @@ sh_sorted_road.iloc[0:100]
 <p>100 rows × 2 columns</p>
 </div>
 
-Draw the busiest first 100 roads on the map:
-
+Draw the top 100 busiest roads on the map:
 
 ```python
 KeplerGl(data={"on_roads": pd.DataFrame(data={'on_roads':sh_sorted_road.on_road.iloc[0:100].to_wkt()})})
