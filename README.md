@@ -6,7 +6,7 @@ Arctern is designed specifically to accelerate the processing, analysis, and vis
 
 - Supports key OGC standard APIs, location-based algorithms, and spatiotemporal models.
 - SQL-based interaction capability. Arctern can quickly present vivid spatiotemporal analysis results using server rendering technologies.
-- Arctern can be deployed anywhere between a standalone laptop and a cluster of multiple servers without compromising user experience.
+- Arctern can be deployed anywhere from a standalone laptop to a cluster of multiple servers without compromising user experience.
 - Arctern integrates technologies such as Pandas and Spark. You do not need to change the existing data analysis methodologies or processes.
 - Python, RESTful, and C++. You can adopt Arctern with ease and great flexibility.
 - Supports x86 and GPU. Arctern can help you reduce hardware costs.
