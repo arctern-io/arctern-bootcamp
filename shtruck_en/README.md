@@ -30,9 +30,9 @@ Download the data prepared for this tutorial including more than 2 million Shang
 
 ```bash
 $ cd /tmp
-# 下载并解压上海渣土车数据
+# Download and unzip the Shanghai Truck data
 $ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/shtruck/file/20181016.zip
-# 下载上海市的地形数据图
+# Download Shanghai roda data
 $ wget https://github.com/arctern-io/arctern-bootcamp/raw/master/shtruck/file/sh_roads.csv
 ```
 
@@ -44,7 +44,7 @@ Download  [arctern_shtruck_bootcamp.ipynb](https://raw.githubusercontent.com/arc
 
 ```bash
 $ wget https://raw.githubusercontent.com/arctern-io/arctern-bootcamp/master/shtruck_en/arctern_shtruck_bootcamp.ipynb
-# 运行 jupyter notebook
+# starting jupyter notebook
 $ jupyter notebook
 ```
 
